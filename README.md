@@ -1,14 +1,4 @@
-<div align="right">
-<details>
-  <summary><b>☕ Support My Work</b></summary>
-  <p align="right">
-    <br>
-    <img src="https://img.shields.io/badge/UPI-abhaydevka169%40okicici-00BFFF?style=for-the-badge&logo=google-pay&logoColor=white"/>
-    <br><br>
-    <i>Thank you for your kindness!</i>
-  </p>
-</details>
-</div>
+
 
 <p align="center">
 <pre align="center">
@@ -19,11 +9,23 @@
 <img id="header" align="center" src="./Assets/1.png" alt="SDDM Themes" width="100%" style="border-radius: 10px; margin-top: 20px; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
 
 
-<p align="center">
-  <a href="https://github.com/sddm/sddm"><img src="https://img.shields.io/badge/SDDM-000000?style=for-the-badge&logo=linux&logoColor=white"/></a>
-  <a href="https://www.qt.io"><img src="https://img.shields.io/badge/QT_QML-000000?style=for-the-badge&logo=qt&logoColor=white"/></a>
-  <a href="https://github.com/Darkkal44/sddm-themes/stargazers"><img src="https://img.shields.io/github/stars/Darkkal44/sddm-themes?style=for-the-badge&color=000000"/></a>
-</p>
+<div align="left">
+  <a href="https://github.com/sddm/sddm"><img src="https://img.shields.io/badge/SDDM-000000?style=for-the-badge&logo=linux&logoColor=white" align="left"/></a>
+  <a href="https://www.qt.io"><img src="https://img.shields.io/badge/QT_QML-000000?style=for-the-badge&logo=qt&logoColor=white" align="left"/></a>
+  <a href="https://github.com/Darkkal44/sddm-themes/stargazers"><img src="https://img.shields.io/github/stars/Darkkal44/sddm-themes?style=for-the-badge&color=000000" align="left"/></a>
+  
+  <div align="right">
+    <details>
+      <summary>☕ Support My Work</summary>
+      <p align="right">
+        <br>
+        <img src="https://img.shields.io/badge/UPI-abhaydevka169%40okicici-00BFFF?style=for-the-badge&logo=google-pay&logoColor=white"/>
+        <br><br>
+        <i>Means a lot, tysm <3</i>
+      </p>
+    </details>
+  </div>
+</div>
 
 ---
 
