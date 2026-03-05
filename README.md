@@ -6,7 +6,7 @@
 </pre>
 </p>
 
-<img id="header" align="center" src="./Assets/1.png" alt="SDDM Themes" width="100%" style="border-radius: 10px; margin-top: 20px; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+<img id="header" align="center" src="./Assets/title.png" alt="SDDM Themes" width="100%" style="border-radius: 10px; margin-top: 20px; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
 
 
 <div align="left">
