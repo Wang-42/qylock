@@ -186,6 +186,49 @@ if [ "$SELECTED_THEME" == "terraria" ]; then
     esac
 fi
 
+# Sub-selection for Genshin theme
+if [ "$SELECTED_THEME" == "Genshin" ]; then
+    info "Customizing Genshin Impact sub-theme..."
+    substep "Select background mode:"
+    echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}1 ${C_DIM}❯ ${C_RESET}Time-based (Dawn / Day / Dusk / Night)"
+    echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}2 ${C_DIM}❯ ${C_RESET}Random (New background per boot)"
+    echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}3 ${C_DIM}❯ ${C_RESET}Manual selection"
+    echo -ne "${C_MAIN}${C_BOLD} ╰─ ${C_YELLOW}Choice: ${C_RESET}"
+    read -rp "" SUB_OPT
+
+    case $SUB_OPT in
+        1)
+            sed -i "s/^background_mode=.*/background_mode=time/" "$THEMES_DIR/$SELECTED_THEME/theme.conf"
+            substep "Time-based mode activated! (dawn → day → dusk → night)"
+            ;;
+        2)
+            sed -i "s/^background_mode=.*/background_mode=random/" "$THEMES_DIR/$SELECTED_THEME/theme.conf"
+            substep "Random mode activated!"
+            ;;
+        3)
+            info "Available backgrounds:"
+            echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}1 ${C_DIM}❯ ${C_RESET}Day (bright sky)"
+            echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}2 ${C_DIM}❯ ${C_RESET}Night (dark stars)"
+            echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}3 ${C_DIM}❯ ${C_RESET}Dawn (golden sunrise)"
+            echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}4 ${C_DIM}❯ ${C_RESET}Dusk (sunset orange)"
+            echo -ne "${C_MAIN}${C_BOLD} ╰─ ${C_YELLOW}Choice: ${C_RESET}"
+            read -rp "" SUB_CHOICE
+            if [[ "$SUB_CHOICE" =~ ^[1-4]$ ]]; then
+                sed -i "s/^background_mode=.*/background_mode=static/" "$THEMES_DIR/$SELECTED_THEME/theme.conf"
+                sed -i "s/^background_index=.*/background_index=$SUB_CHOICE/" "$THEMES_DIR/$SELECTED_THEME/theme.conf"
+                substep "Background $SUB_CHOICE activated!"
+            else
+                error "Invalid choice. Defaulting to time-based."
+                sed -i "s/^background_mode=.*/background_mode=time/" "$THEMES_DIR/$SELECTED_THEME/theme.conf"
+            fi
+            ;;
+        *)
+            substep "Defaulting to time-based mode."
+            sed -i "s/^background_mode=.*/background_mode=time/" "$THEMES_DIR/$SELECTED_THEME/theme.conf"
+            ;;
+    esac
+fi
+
 if [ -z "$SELECTED_THEME" ]; then
     error "No theme selected. Exiting."
     exit 0
