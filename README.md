@@ -80,7 +80,7 @@ chmod +x quickshell.sh
 ```
 
 **3. Configure your Window Manager:**
-Once completed, the script will output copy-paste snippets. You simply bind a keyboard shortcut in your WM config (e.g., Qtile, Hyprland, Sway or i3) to trigger `~/.local/share/quickshell-lockscreen/lock.sh`.
+Once completed, simply bind a keyboard shortcut in your Window Manager's configuration file (e.g., Qtile, Hyprland, Sway or i3) to trigger `~/.local/share/quickshell-lockscreen/lock.sh`.
 
 <br>
 
