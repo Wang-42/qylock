@@ -6,63 +6,114 @@ set -e
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="$HOME/.local/share/quickshell-lockscreen"
 
-# 1. Ask for installation
-echo -e "\033[1;36m=== Quickshell Lockscreen Installer ===\033[0m"
-echo "This will install the Quickshell lockscreen wrapper to $TARGET_DIR."
-read -p "Do you want to proceed? (y/n) " -n 1 -r
+# Reset terminal colors on exit or crash
+trap 'echo -ne "\033[0m"' EXIT
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Theme Palette & UI Functions
+# ─────────────────────────────────────────────────────────────────────────────
+
+C_MAIN='\033[38;2;202;169;224m'
+C_ACCENT='\033[38;2;145;177;240m'
+C_DIM='\033[38;2;129;122;150m'
+C_GREEN='\033[38;2;166;209;137m'
+C_YELLOW='\033[38;2;229;200;144m'
+C_RED='\033[38;2;231;130;132m'
+C_BOLD='\033[1m'
+C_RESET='\033[0m'
+
+header() {
+    clear
+    echo -e "${C_MAIN}${C_BOLD}"
+    echo " ╭──────────────────────────────────────────╮"
+    echo " │     🔒 QUICKSHELL LOCKSCREEN SETUP 🔒    │"
+    echo " ╰──────────────────────────────────────────╯"
+    echo -e "${C_RESET}"
+}
+
+info() {
+    echo -e "${C_MAIN}${C_BOLD} ╭─ 󰓅 $1${C_RESET}"
+}
+
+substep() {
+    echo -e "${C_MAIN}${C_BOLD} │  ${C_DIM}❯ ${C_RESET}$1"
+}
+
+success() {
+    echo -e "${C_MAIN}${C_BOLD} ╰─ ${C_GREEN}✔ ${C_RESET}$1\n"
+}
+
+error() {
+    echo -e "${C_MAIN}${C_BOLD} ╰─ ${C_RED}✘ ${C_RESET}$1\n"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Core Logic
+# ─────────────────────────────────────────────────────────────────────────────
+
+header
+
+info "Initializing Installation..."
+substep "Target directory: $TARGET_DIR"
+
+echo -ne "${C_MAIN}${C_BOLD} │  ${C_YELLOW}Do you want to proceed? (y/n): ${C_RESET}"
+read -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "Aborted."
+    error "Installation aborted."
     exit 1
 fi
 
-# 2. Copy the quickshell-lockscreen directory
-echo "Copying lockscreen base files to $TARGET_DIR..."
+info "Deploying Base Files..."
 rm -rf "$TARGET_DIR"
 cp -r "$DIR/quickshell-lockscreen" "$TARGET_DIR"
+substep "Copied wrapper successfully"
 
-# 3. Create themes_link
-echo "Creating themes_link to your local themes folder..."
 ln -sfn "$DIR/themes" "$TARGET_DIR/themes_link"
+substep "Created symbolic link to local themes"
 
-# 4. Make lock.sh executable
 chmod +x "$TARGET_DIR/lock.sh"
+success "Permissions applied"
 
-# 5. Provide theme selection
-echo
-echo "Available themes:"
-ls -1 "$DIR/themes" | sed 's/^/  - /'
-echo
-read -p "Which theme would you like to set as default? (e.g. Genshin): " THEME_NAME
+info "Selecting Default Lockscreen Theme..."
 
-if [ -z "$THEME_NAME" ] || [ ! -d "$DIR/themes/$THEME_NAME" ]; then
-    echo "Theme not found or not specified. Defaulting to 'Genshin'."
-    THEME_NAME="Genshin"
+THEMES_DIR="$DIR/themes"
+
+if ! command -v fzf &> /dev/null; then
+    substep "fzf not found. Using basic list..."
+    THEMES=($(ls -1 "$THEMES_DIR"))
+    for i in "${!THEMES[@]}"; do
+        echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}$((i+1)) ${C_DIM}❯ ${C_RESET}${THEMES[$i]}"
+    done
+    echo -ne "${C_MAIN}${C_BOLD} ╰─ ${C_YELLOW}Choice: ${C_RESET}"
+    read -rp "" SELECTION
+    if [[ "$SELECTION" =~ ^[0-9]+$ ]] && [ "$SELECTION" -ge 1 ] && [ "$SELECTION" -le "${#THEMES[@]}" ]; then
+        THEME_NAME="${THEMES[$((SELECTION-1))]}"
+    else
+        error "Invalid selection. Defaulting to 'Genshin'."
+        THEME_NAME="Genshin"
+    fi
+else
+    THEME_NAME=$(ls -1 "$THEMES_DIR" | fzf --prompt="Select theme: " --height=15 --reverse --border --header="Use arrow keys/Enter to select lockscreen theme")
+    if [ -z "$THEME_NAME" ]; then
+        error "No theme selected. Defaulting to 'Genshin'."
+        THEME_NAME="Genshin"
+    fi
 fi
 
 sed -i "s/export QS_THEME=.*$/export QS_THEME=\"\${1:-$THEME_NAME}\"/" "$TARGET_DIR/lock.sh"
+success "Theme '$THEME_NAME' set as lockscreen default!"
 
-echo
-echo -e "\033[1;32mInstallation complete!\033[0m"
-echo -e "You can now lock the screen by running:"
-echo -e "  \033[1;33m$TARGET_DIR/lock.sh\033[0m"
-echo
-echo -e "\033[1;36m=== Lock Screen Keyboard Shortcuts Instructions ===\033[0m"
-echo -e "To use this lockscreen natively, bind it to a keyboard shortcut (e.g., Mod + L) in your Window Manager.\n"
-echo -e "Here are snippets for common environments:\n"
-
-echo -e "\033[1;34m[ Qtile ] (in ~/.config/qtile/config.py)\033[0m"
-echo -e "Key([mod], \"l\", lazy.spawn(\"$TARGET_DIR/lock.sh\")),"
-echo
-
-echo -e "\033[1;34m[ Hyprland ] (in ~/.config/hypr/hyprland.conf)\033[0m"
-echo -e "bind = \$mainMod, L, exec, $TARGET_DIR/lock.sh"
-echo
-
-echo -e "\033[1;34m[ Sway ] (in ~/.config/sway/config)\033[0m"
-echo -e "bindsym \$mod+l exec $TARGET_DIR/lock.sh"
-echo
-
-echo -e "\033[1;34m[ i3 / bspwm / AwesomeWM ]\033[0m"
-echo -e "Map your designated lock key to execute \`$TARGET_DIR/lock.sh\` in your respective config file."
-echo
+info "Keyboard Shortcut Instructions"
+substep "To use this lockscreen natively, bind it to a shortcut (e.g., Mod + L) in your Window Manager."
+echo ""
+echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}[ Qtile ] ${C_DIM}(~/.config/qtile/config.py)${C_RESET}"
+echo -e "${C_MAIN}${C_BOLD} │  ${C_RESET}Key([mod], \"l\", lazy.spawn(\"$TARGET_DIR/lock.sh\")),"
+echo ""
+echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}[ Hyprland ] ${C_DIM}(~/.config/hypr/hyprland.conf)${C_RESET}"
+echo -e "${C_MAIN}${C_BOLD} │  ${C_RESET}bind = \$mainMod, L, exec, $TARGET_DIR/lock.sh"
+echo ""
+echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}[ Sway ] ${C_DIM}(~/.config/sway/config)${C_RESET}"
+echo -e "${C_MAIN}${C_BOLD} │  ${C_RESET}bindsym \$mod+l exec $TARGET_DIR/lock.sh"
+echo ""
+success "Setup completely successfully. Stay secure!"
