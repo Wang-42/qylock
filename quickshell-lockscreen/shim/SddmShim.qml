@@ -94,7 +94,8 @@ Item {
             if (result === PamResult.Success) {
                 shim.sddm.loginSucceeded();
                 Quickshell.execDetached(["loginctl", "unlock-session"]);
-                Quickshell.execDetached(["kill", "-9", Quickshell.processId.toString()]);
+                // Both emitting the signal for lock_shell.qml and calling
+                // loginctl to satisfy any external session monitors.
             } else {
                 shim.sddm.loginFailed();
             }

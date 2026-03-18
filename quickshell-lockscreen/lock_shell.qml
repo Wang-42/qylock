@@ -14,10 +14,36 @@ ShellRoot {
     readonly property var userModel: sddmShim.userModel
     readonly property var sessionModel: sddmShim.sessionModel
     readonly property bool isWayland: Quickshell.env("XDG_SESSION_TYPE") === "wayland"
+    property bool authenticated: false
+    property bool sessionLocked: true
 
     SddmShim {
         id: sddmShim
         themePath: shellRoot.themePath
+    }
+
+    Connections {
+        target: sddmShim.sddm
+        function onLoginSucceeded() {
+            shellRoot.authenticated = true
+            shellRoot.sessionLocked = false
+            
+            // Hyprland Hack: Explicitly tell the compositor that it's okay for 
+            // the session lock to vanish. This stops the "Oopsie daisy" screen.
+            Quickshell.execDetached(["hyprctl", "keyword", "misc:allow_session_lock_restore", "1"]);
+            Quickshell.execDetached(["loginctl", "unlock-session"]);
+
+            // Transition gracefully like caelestia does.
+            quitTimer.start()
+        }
+    }
+
+    Timer {
+        id: quitTimer
+        interval: 1500
+        onTriggered: {
+            Qt.quit();
+        }
     }
 
     Component {
@@ -41,11 +67,12 @@ ShellRoot {
     }
 
     Loader {
+        id: waylandLoader
         active: shellRoot.isWayland
         sourceComponent: Component {
             WlSessionLock {
                 id: lock
-                locked: true
+                locked: shellRoot.sessionLocked
                 surface: Component {
                     WlSessionLockSurface {
                         color: "black"
@@ -60,6 +87,7 @@ ShellRoot {
     }
 
     Loader {
+        id: x11Loader
         active: !shellRoot.isWayland
         sourceComponent: Component {
             Variants {
@@ -70,11 +98,11 @@ ShellRoot {
                     screen: modelData
                     width: screen.width
                     height: screen.height
-                    visible: true
+                    visible: shellRoot.sessionLocked
                     visibility: Window.FullScreen
                     
                     onClosing: (close) => {
-                        close.accepted = false;
+                        close.accepted = shellRoot.authenticated;
                     }
                     
                     flags: Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint | Qt.MaximizeUsingFullscreenGeometryHint

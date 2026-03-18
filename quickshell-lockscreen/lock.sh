@@ -12,5 +12,9 @@ export QS_THEME="${1:-Genshin}"
 
 echo "Locking with Quickshell using theme: $QS_THEME"
 
-# Run the shell
-quickshell -p "$DIR/shell.qml"
+# Safety: Kill any other lockers that might be running (like hyprlock from hypridle)
+# Only one app can hold the Wayland session lock at a time.
+killall -9 hyprlock swaylock wlogout 2>/dev/null || true
+
+# Run the shell with a unique filename to avoid IPC interference with existing bars
+quickshell -p "$DIR/lock_shell.qml"
