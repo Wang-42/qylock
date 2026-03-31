@@ -35,9 +35,7 @@
 
 Start by installing these dependencies using the package manager of your distro. (Note: Names might vary depending on your distribution.)
 
-<details>
-<summary><b>View Dependencies</b></summary>
-<br>
+#### DEPENDENCIES
 
 | | Packages |
 |--:|:---|
@@ -46,8 +44,6 @@ Start by installing these dependencies using the package manager of your distro.
 | **Video · Qt6** | `qt6-multimedia-ffmpeg` |
 | **GStreamer** | `gst-plugins-base` `gst-plugins-good` `gst-plugins-bad` `gst-plugins-ugly` |
 | **Optional** | `fzf` |
-
-</details>
 
 <details>
 <summary><b>View Font Requirements</b></summary>
@@ -86,9 +82,7 @@ chmod +x sddm.sh && ./sddm.sh
 <br>
 
 Start by installing these dependencies using the package manager of your distro. (Note: Names might vary depending on your distribution.)
-<details>
-<summary><b>View Dependencies</b></summary>
-<br>
+#### DEPENDENCIES
 
 | | Packages |
 |--:|:---|
@@ -96,8 +90,6 @@ Start by installing these dependencies using the package manager of your distro.
 | **Video** | `qt6-multimedia` `qt6-multimedia-ffmpeg` |
 | **GStreamer** | `gst-plugins-base` `gst-plugins-good` `gst-plugins-bad` `gst-plugins-ugly` |
 | **Optional** | `fzf` |
-
-</details>
 
 <br>
 
