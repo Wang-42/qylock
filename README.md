@@ -58,6 +58,7 @@ Some themes rely on fonts that cannot be bundled here (copyright issues). Downlo
 | Genshin Impact | HYWenHei-85W | `zhcn.ttf` |
 | Sword | The Last Shuriken | `The Last Shuriken.ttf` |
 | Minecraft | Minecraft Regular | `minecraft.ttf` |
+| Honkai: Star Rail | DIN Next | `DINNextW1G-Medium.otf` |
 
 </details>
 
@@ -219,12 +220,21 @@ Point your Window Manager keybind (e.g., in Hyprland, Qtile, Sway, or i3) direct
     </tr>
     <tr>
       <td align="center" width="50%" style="padding: 15px; border: none;">
+        <b>Honkai: Star Rail</b><br><br>
+        <img src="./Assets/star_rail.gif" width="100%" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"/>
+      </td>
+      <td align="center" width="50%" style="padding: 15px; border: none;">
         <b>Wuthering Waves</b><br><br>
         <img src="./Assets/wuwa.gif" width="100%" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"/>
       </td>
+    </tr>
+    <tr>
       <td align="center" width="50%" style="padding: 15px; border: none;">
         <b>Ninja Gaiden</b><br><br>
         <img src="./Assets/ninja_gaiden.gif" width="100%" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"/>
+      </td>
+      <td align="center" width="50%" style="padding: 15px; border: none;">
+        <!-- Placeholder for future theme -->
       </td>
     </tr>
   </table>
