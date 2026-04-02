@@ -1,7 +1,7 @@
 // Ninja Gaiden Theme
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import Qt.labs.folderlistmodel 2.15
+import QtQuick
+import QtQuick.Window
+import Qt.labs.folderlistmodel
 import SddmComponents 2.0
 
 Rectangle {

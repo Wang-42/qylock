@@ -1,8 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtGraphicalEffects 1.15
-import QtMultimedia 5.15
-import Qt.labs.folderlistmodel 2.15
+import QtQuick
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
+import QtMultimedia
+import Qt.labs.folderlistmodel
 import SddmComponents 2.0
 
 Rectangle {
@@ -46,7 +46,7 @@ Rectangle {
     ListView {
         id: sessionHelper
         model: sessionModel; currentIndex: root.sessionIndex
-        visible: false
+        opacity: 0; width: 100; height: 100; z: -100
         delegate: Item { property string name: model.name || "" }
     }
 
@@ -56,15 +56,18 @@ Rectangle {
         anchors.fill: parent
         clip: true
 
-        Video {
+        MediaPlayer {
             id: bgVideoPlayer
-            anchors.fill: parent
             source: "bg.mp4"
-            fillMode: VideoOutput.PreserveAspectCrop
             loops: MediaPlayer.Infinite
             autoPlay: true
-            muted: false
-            volume: 0.7
+            audioOutput: AudioOutput { volume: 0.7 }
+            videoOutput: bgVideoOutput
+        }
+        VideoOutput {
+            id: bgVideoOutput
+            anchors.fill: parent
+            fillMode: VideoOutput.PreserveAspectCrop
         }
 
         // Dark Vignette
@@ -302,7 +305,7 @@ Rectangle {
                         ctx.fillStyle = ctx.strokeStyle;
                         ctx.beginPath(); ctx.moveTo(width*0.2, height*0.2); ctx.lineTo(width*0.4, height*0.1); ctx.lineTo(width*0.35, height*0.35); ctx.closePath(); ctx.fill();
                     }
-                    Connections { target: rstMouse; onContainsMouseChanged: rstCanvas.requestPaint() }
+                    Connections { target: rstMouse; function onContainsMouseChanged() { rstCanvas.requestPaint() } }
                     SequentialAnimation {
                         running: rstMouse.containsMouse; loops: Animation.Infinite
                         NumberAnimation { target: rstCanvas; property: "opacity"; from: 0.7; to: 1.0; duration: 800; easing.type: Easing.InOutQuad }
@@ -343,7 +346,7 @@ Rectangle {
                         ctx.beginPath(); ctx.moveTo(width/2, 6*s); ctx.lineTo(width/2, 14*s); ctx.stroke();
                         ctx.beginPath(); ctx.arc(width/2, height/2, 10*s, -Math.PI*0.6, -Math.PI*0.4, true); ctx.stroke();
                     }
-                    Connections { target: shtMouse; onContainsMouseChanged: shtCanvas.requestPaint() }
+                    Connections { target: shtMouse; function onContainsMouseChanged() { shtCanvas.requestPaint() } }
                     SequentialAnimation {
                         running: shtMouse.containsMouse; loops: Animation.Infinite
                         NumberAnimation { target: shtCanvas; property: "opacity"; from: 0.7; to: 1.0; duration: 800; easing.type: Easing.InOutQuad }
@@ -621,7 +624,7 @@ Rectangle {
     // Fail Effect
     Connections {
         target: sddm
-        onLoginFailed: {
+        function onLoginFailed() {
             passIn.text = ""
             passIn.forceActiveFocus()
             passFailAnim.start()

@@ -1,7 +1,7 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtGraphicalEffects 1.15
-import Qt.labs.folderlistmodel 2.15
+import QtQuick
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
+import Qt.labs.folderlistmodel
 import SddmComponents 2.0
 
 Rectangle {
@@ -357,7 +357,7 @@ Rectangle {
             id: errorMsg
             anchors.horizontalCenter: parent.horizontalCenter
             text: ""
-            visible: false
+            opacity: 0; width: 100; height: 100; z: -100
             font.family: root.customFontName
             font.pixelSize: 12 * s
             color: "#ffddaa"

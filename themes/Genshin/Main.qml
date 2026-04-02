@@ -1,8 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtGraphicalEffects 1.15
-import QtMultimedia 5.15
-import Qt.labs.folderlistmodel 2.15
+import QtQuick
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
+import QtMultimedia
+import Qt.labs.folderlistmodel
 import SddmComponents 2.0
 
 Rectangle {
@@ -50,7 +50,7 @@ Rectangle {
     ListView {
         id: sessionHelper
         model: sessionModel; currentIndex: root.sessionIndex
-        visible: false
+        opacity: 0; width: 100; height: 100; z: -100
         delegate: Item { property string name: model.name || "" }
     }
 
@@ -59,14 +59,18 @@ Rectangle {
         anchors.fill: parent
         clip: true
 
-        Video {
+        MediaPlayer {
             id: bgVideoPlayer
-            anchors.fill: parent
             source: root.bgVideo
-            fillMode: VideoOutput.PreserveAspectCrop
             loops: MediaPlayer.Infinite
             autoPlay: true
-            muted: true
+            audioOutput: AudioOutput { volume: 0 }
+            videoOutput: bgVideoOutput
+        }
+        VideoOutput {
+            id: bgVideoOutput
+            anchors.fill: parent
+            fillMode: VideoOutput.PreserveAspectCrop
         }
 
         Rectangle {
@@ -346,5 +350,5 @@ Rectangle {
         }
     }
 
-    Connections { target: sddm; onLoginFailed: { passIn.text = ""; passIn.forceActiveFocus() } }
+    Connections { target: sddm; function onLoginFailed() { passIn.text = ""; passIn.forceActiveFocus() } }
 }

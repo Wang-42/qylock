@@ -1,6 +1,6 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtGraphicalEffects 1.15
+import QtQuick
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 import SddmComponents 2.0
 
 // Skyscrapers Layout
@@ -19,8 +19,8 @@ Rectangle {
 
     FontLoader { id: pf; source: "font/PixelifySans-Bold.ttf" }
     
-    ListView { id: sessionHelper; model: sessionModel; currentIndex: root.sessionIndex; visible: false; delegate: Item { property string sName: model.name || "" } }
-    ListView { id: userHelper; model: userModel; currentIndex: root.userIndex; visible: false; delegate: Item { property string uName: model.realName || model.name || ""; property string uLogin: model.name || "" } }
+    ListView { id: sessionHelper; model: sessionModel; currentIndex: root.sessionIndex; opacity: 0; width: 100; height: 100; z: -100; delegate: Item { property string sName: model.name || "" } }
+    ListView { id: userHelper; model: userModel; currentIndex: root.userIndex; opacity: 0; width: 100; height: 100; z: -100; delegate: Item { property string uName: model.realName || model.name || ""; property string uLogin: model.name || "" } }
 
     Component.onCompleted: fadeAnim.start()
     NumberAnimation { id: fadeAnim; target: root; property: "ui"; from: 0; to: 1; duration: 2000; easing.type: Easing.OutSine }

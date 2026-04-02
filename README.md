@@ -39,9 +39,8 @@ Start by installing these dependencies using the package manager of your distro.
 
 | | Packages |
 |--:|:---|
-| **Core** | `sddm` `qt5-graphicaleffects` `qt5-quickcontrols2` `qt5-svg` |
-| **Video · Qt5** | `qt5-multimedia` |
-| **Video · Qt6** | `qt6-multimedia-ffmpeg` |
+| **Core** | `sddm` `qt6-declarative` `qt6-5compat` `qt6-svg` |
+| **Video** | `qt6-multimedia` `qt6-multimedia-ffmpeg` |
 | **GStreamer** | `gst-plugins-base` `gst-plugins-good` `gst-plugins-bad` `gst-plugins-ugly` |
 | **Optional** | `fzf` |
 
@@ -58,7 +57,7 @@ Some themes rely on fonts that cannot be bundled here (copyright issues). Downlo
 | Genshin Impact | HYWenHei-85W | `zhcn.ttf` |
 | Sword | The Last Shuriken | `The Last Shuriken.ttf` |
 | Minecraft | Minecraft Regular | `minecraft.ttf` |
-| Honkai: Star Rail | DIN Next | `DINNextW1G-Medium.otf` |
+| Honkai: Star Rail | DIN Next | `font.ttf` |
 
 </details>
 

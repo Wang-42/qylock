@@ -1,7 +1,7 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtGraphicalEffects 1.15
-import Qt.labs.folderlistmodel 2.15
+import QtQuick
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
+import Qt.labs.folderlistmodel
 import SddmComponents 2.0
 
 // Minecraft theme
@@ -341,7 +341,7 @@ Rectangle {
             // Dropdown
             Item {
                 id: sessionDropdown
-                visible: false
+                opacity: 0; width: 100; height: 100; z: -100
                 width: parent.width
                 height: Math.min(sessionModel.rowCount() * 38, 152)
                 // opens ABOVE the session button
