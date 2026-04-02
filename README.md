@@ -15,7 +15,7 @@
 <br>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/-HELLO%20THERE!!-e0af68?style=for-the-badge&labelColor=1a1b26" height="60" />
+  <img src="https://img.shields.io/badge/-HELLO%20THERE!!-e0af68?style=for-the-badge&labelColor=1a1b26&logo=coffeescript&logoColor=white" height="60" />
 </p>
 
 <p>Welcome to <b>Qylock</b>! Pretty much a bunch of lockscreen themes I've put together for SDDM and Quickshell. I've always loved the "cozy" and minimalist vibe, so I've tried to keep everything looking clean~ </p>
@@ -29,13 +29,13 @@
 <br>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/-SDDM%20SETUP-7aa2f7?style=for-the-badge&labelColor=1a1b26" height="60" />
+  <img src="https://img.shields.io/badge/-SDDM%20SETUP-7aa2f7?style=for-the-badge&labelColor=1a1b26&logo=linux&logoColor=white" height="60" />
 </p>
 <br>
 
 Start by installing these dependencies using the package manager of your distro. (Note: Names might vary depending on your distribution.)
 
-#### DEPENDENCIES
+#### 📦 DEPENDENCIES
 
 | | Packages |
 |--:|:---|
@@ -63,7 +63,7 @@ Some themes rely on fonts that cannot be bundled here (copyright issues). Downlo
 
 <br>
 
-#### INSTALLATION
+#### 🚀 INSTALLATION
 
 ```sh
 chmod +x sddm.sh && ./sddm.sh
@@ -76,13 +76,13 @@ chmod +x sddm.sh && ./sddm.sh
 <br>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/-QUICKSHELL%20SETUP-bb9af7?style=for-the-badge&labelColor=1a1b26" height="60" />
+  <img src="https://img.shields.io/badge/-QUICKSHELL%20SETUP-bb9af7?style=for-the-badge&labelColor=1a1b26&logo=qt&logoColor=white" height="60" />
 </p>
 
 <br>
 
 Start by installing these dependencies using the package manager of your distro. (Note: Names might vary depending on your distribution.)
-#### DEPENDENCIES
+#### 📦 DEPENDENCIES
 
 | | Packages |
 |--:|:---|
@@ -93,7 +93,7 @@ Start by installing these dependencies using the package manager of your distro.
 
 <br>
 
-#### INSTALLATION
+#### 🚀 INSTALLATION
 
 ```sh
 chmod +x quickshell.sh && ./quickshell.sh
@@ -102,7 +102,7 @@ chmod +x quickshell.sh && ./quickshell.sh
 
 <br>
 
-#### SHORTCUT BINDING
+#### ⌨️ SHORTCUT BINDING
 
 Point your Window Manager keybind (e.g., in Hyprland, Qtile, Sway, or i3) directly to:
 
@@ -120,7 +120,7 @@ Point your Window Manager keybind (e.g., in Hyprland, Qtile, Sway, or i3) direct
 <br>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/-GALLERY-9ece6a?style=for-the-badge&labelColor=1a1b26" height="60" />
+  <img src="https://img.shields.io/badge/-GALLERY-9ece6a?style=for-the-badge&labelColor=1a1b26&logo=unsplash&logoColor=white" height="60" />
 </p>
 
 <br>
@@ -248,7 +248,7 @@ Point your Window Manager keybind (e.g., in Hyprland, Qtile, Sway, or i3) direct
 <br>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/-CREDITS-f7768e?style=for-the-badge&labelColor=1a1b26" height="60" />
+  <img src="https://img.shields.io/badge/-CREDITS-f7768e?style=for-the-badge&labelColor=1a1b26&logo=kofi&logoColor=white" height="60" />
 </p>
 
 <div align="center">
