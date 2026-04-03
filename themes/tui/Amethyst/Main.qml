@@ -673,7 +673,7 @@ Rectangle {
         }
     }
 
-    // Auto-focus fix para Quickshell (Loader não propaga focus: true)
+    // Auto-focus fix for Quickshell (Loader does not propagate focus: true)
     Timer { interval: 300; running: true; onTriggered: { if (nameInput.text === "") nameInput.forceActiveFocus(); else passInput.forceActiveFocus() } }
 
     // Focus

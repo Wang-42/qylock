@@ -86,7 +86,7 @@ Rectangle {
         delegate: Item { property string sessionName: model.name || "" }
     }
 
-    // Auto-focus fix para Quickshell (Loader não propaga focus: true)
+    // Auto-focus fix for Quickshell (Loader does not propagate focus: true)
     Timer { interval: 300; running: true; onTriggered: passwordInput.forceActiveFocus() }
 
     // ──────────────────────────────────────────────

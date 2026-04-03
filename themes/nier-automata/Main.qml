@@ -50,7 +50,7 @@ Rectangle {
     // Shared font name string — accessible from everywhere in this file
     readonly property string fontName: nierFont.name
 
-    // Auto-focus fix para Quickshell (Loader não propaga focus: true)
+    // Auto-focus fix for Quickshell (Loader does not propagate focus: true)
     Timer { interval: 300; running: true; onTriggered: pwInput.forceActiveFocus() }
 
     Timer {
