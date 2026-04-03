@@ -58,7 +58,7 @@ Rectangle {
         id: sessionHelper
         model: sessionModel; currentIndex: root.sessionIndex
         opacity: 0; width: 100; height: 100; z: -100; visible: true
-        delegate: Item { property string sName: model.name || "" }
+        delegate: Item { property string sName: model.name || ""; property string sComment: model.comment || "" }
     }
     ListView {
         id: userHelper
@@ -73,28 +73,23 @@ Rectangle {
         anchors.centerIn: parent
         width: 420 * s; spacing: 20 * s; opacity: root.uiOpacity
 
-        // --- Header Block ---
+        // --- Minecraft Logo Header ---
         Item {
-            width: parent.width; height: 140 * s
-            Column {
-                anchors.centerIn: parent; spacing: 4 * s
-                McText {
-                    id: clockTime; label: Qt.formatTime(new Date(), "HH:mm")
-                    pixelSize: 96 * s; textColor: root.mcTextYellow
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    Timer { interval: 1000; running: true; repeat: true; onTriggered: clockTime.label = Qt.formatTime(new Date(), "HH:mm") }
-                }
-                McText {
-                    label: Qt.formatDate(new Date(), "dddd, MMMM d")
-                    pixelSize: 20 * s; textColor: root.mcTextGray; anchors.horizontalCenter: parent.horizontalCenter
-                }
+            width: parent.width; height: 200 * s
+            Image {
+                id: mainLogo; source: "title.png"
+                width: 850 * s; height: 180 * s
+                fillMode: Image.PreserveAspectFit
+                anchors.horizontalCenter: parent.horizontalCenter
             }
 
-            // Animated Splash
+            // Animated Splash (Overlapping the top-right corner)
             Text {
-                id: splashText; anchors.left: parent.horizontalCenter; anchors.leftMargin: 80 * s
-                anchors.top: parent.top; anchors.topMargin: -10 * s
-                text: "GNU/Linux!"; font.family: mcFont.name; font.pixelSize: 22 * s
+                id: splashText
+                anchors.horizontalCenter: mainLogo.horizontalCenter; anchors.horizontalCenterOffset: 255 * s
+                anchors.top: mainLogo.top; anchors.topMargin: 35 * s
+                
+                text: "GNU/Linux!"; font.family: mcFont.name; font.pixelSize: 24 * s
                 color: root.mcTextYellow; rotation: -20; style: Text.Outline; styleColor: "black"
                 SequentialAnimation on scale {
                     loops: Animation.Infinite
@@ -110,16 +105,16 @@ Rectangle {
 
         Item { width: 1; height: 12 * s } 
 
-        // --- Username Area (Clickable Toggler) ---
+        // --- Username Area ---
         Column {
             width: parent.width; spacing: 10 * s
-            McText { label: "Logged in as:"; pixelSize: 15 * s; textColor: root.mcTextGray }
+            McText { label: "Logged in as:"; pixelSize: 12 * s; textColor: root.mcTextGray }
             McTextField {
                 id: userBox; width: parent.width; height: 44 * s; inputRef: userMouse
                 McText {
                     anchors.left: parent.left; anchors.leftMargin: 12 * s
                     anchors.verticalCenter: parent.verticalCenter
-                    label: (userHelper.currentItem && userHelper.currentItem.uLogin !== "") ? userHelper.currentItem.uLogin : (userModel.lastUser || "User")
+                    label: capitalizeFirst((userHelper.currentItem && userHelper.currentItem.uLogin !== "") ? userHelper.currentItem.uLogin : (userModel.lastUser || "User"))
                     pixelSize: 18 * s; textColor: root.mcTextWhite
                 }
                 MouseArea {
@@ -133,7 +128,7 @@ Rectangle {
         // --- Password Area ---
         Column {
             width: parent.width; spacing: 10 * s
-            McText { label: "Enter Password:"; pixelSize: 15 * s; textColor: root.mcTextGray }
+            McText { label: "Enter Password:"; pixelSize: 12 * s; textColor: root.mcTextGray }
             McTextField {
                 id: passField; width: parent.width; height: 42 * s; inputRef: passInput
                 TextInput {
@@ -229,6 +224,26 @@ Rectangle {
         focus: visible
     }
 
+    // --- Java Edition Style Corners ---
+    Item {
+        anchors.fill: parent; opacity: root.uiOpacity
+        
+        // Bottom-Left (Time as Version)
+        McText {
+            anchors.bottom: parent.bottom; anchors.left: parent.left; anchors.margins: 6 * s
+            id: versionText; label: "Current Time: " + Qt.formatTime(new Date(), "HH:mm")
+            pixelSize: 14 * s; textColor: root.mcTextWhite
+            Timer { interval: 1000; running: true; repeat: true; onTriggered: versionText.label = "Current Time: " + Qt.formatTime(new Date(), "HH:mm") }
+        }
+
+        // Bottom-Right (Date as Copyright)
+        McText {
+            anchors.bottom: parent.bottom; anchors.right: parent.right; anchors.margins: 6 * s
+            label: Qt.formatDate(new Date(), "dddd, MMMM d")
+            pixelSize: 14 * s; textColor: root.mcTextWhite
+        }
+    }
+
     // --- Fade-in ---
     NumberAnimation { id: fadeIn; target: root; property: "uiOpacity"; to: 1; duration: 1000; easing.type: Easing.OutCubic }
     Component.onCompleted: fadeIn.start()
@@ -237,14 +252,21 @@ Rectangle {
         var lName = (userHelper.currentItem && userHelper.currentItem.uLogin !== "") ? userHelper.currentItem.uLogin : (userModel.lastUser || "")
         sddm.login(lName, passInput.text, root.sessionIndex) 
     }
+    
+    function capitalizeFirst(str) {
+        if (!str) return "";
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     Connections { target: sddm; function onLoginFailed() { errText.text = "INVALID CREDENTIALS"; passInput.text = ""; passInput.forceActiveFocus() } }
 
     // --- Minecraft Components ---
     component McText: Item {
         property string label: ""; property int pixelSize: 16 * s; property color textColor: root.mcTextWhite
-        implicitWidth: fore.implicitWidth + 2 * s; implicitHeight: fore.implicitHeight + 2 * s
-        Text { x: 2 * s; y: 2 * s; text: label; color: root.mcTextShadow; font.family: mcFont.name; font.pixelSize: pixelSize }
-        Text { id: fore; text: label; color: textColor; font.family: mcFont.name; font.pixelSize: pixelSize }
+        property int horizontalAlignment: Text.AlignLeft
+        implicitWidth: fore.implicitWidth + 8 * s; implicitHeight: fore.implicitHeight + 2 * s
+        Text { x: 2 * s; y: 2 * s; width: parent.width; text: label; color: root.mcTextShadow; font.family: mcFont.name; font.pixelSize: pixelSize; horizontalAlignment: parent.horizontalAlignment }
+        Text { id: fore; width: parent.width; text: label; color: textColor; font.family: mcFont.name; font.pixelSize: pixelSize; horizontalAlignment: parent.horizontalAlignment }
     }
     component McTextField: Item {
         property var inputRef
