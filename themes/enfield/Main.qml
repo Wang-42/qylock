@@ -414,7 +414,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
             }
             Text {
-                text: (sessionHelper.currentItem && sessionHelper.currentItem.sName)
+                text: (sessionModel && sessionModel.count > root.sessionIndex && root.sessionIndex >= 0)
                       ? sessionHelper.currentItem.sName : "Session"
                 color: "white"; opacity: 0.45
                 font.family: orbitron.name; font.pixelSize: 11 * s; font.letterSpacing: 1 * s

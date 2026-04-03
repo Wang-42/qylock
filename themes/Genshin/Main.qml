@@ -54,7 +54,7 @@ Rectangle {
         id: sessionHelper
         model: sessionModel; currentIndex: root.sessionIndex
         opacity: 0; width: 100; height: 100; z: -100
-        delegate: Item { property string name: model.name || "" }
+        delegate: Item { property string sName: model.name || "" }
     }
 
     Item {
@@ -67,7 +67,6 @@ Rectangle {
             source: root.bgVideo
             loops: MediaPlayer.Infinite
             autoPlay: true
-            audioOutput: AudioOutput { volume: 0 }
             videoOutput: bgVideoOutput
         }
         VideoOutput {
@@ -124,7 +123,7 @@ Rectangle {
                 Rectangle { width: 6 * s; height: 6 * s; color: root.isDarkTheme ? "#1a243d" : "white"; anchors.centerIn: parent }
             }
             Text {
-                text: (userModel.data(userModel.index(userModel.lastIndex, 0), Qt.UserRole + 1) || "Traveler").toUpperCase()
+                text: (activeUser || "USER").toUpperCase()
                 font.family: mainFont.name; font.pixelSize: 16 * s; font.letterSpacing: 2 * s
                 color: root.gTextMain; font.bold: true
                 style: Text.Outline; styleColor: root.isDarkTheme ? "#aa000000" : "#44ffffff"
@@ -238,7 +237,7 @@ Rectangle {
                 }
 
                 Text {
-                    text: (sessionHelper.currentItem && sessionHelper.currentItem.name) ? sessionHelper.currentItem.name : "Select Realm"
+                    text: (sessionModel && sessionModel.count > root.sessionIndex && root.sessionIndex >= 0) ? sessionHelper.currentItem.sName : "Select Realm"
                     anchors.centerIn: parent
                     font.family: mainFont.name; font.pixelSize: 22 * s; color: "#ece5d8"
                     font.letterSpacing: 1.5 * s

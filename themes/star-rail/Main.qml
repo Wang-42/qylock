@@ -50,7 +50,7 @@ Rectangle {
         id: sessionHelper
         model: sessionModel; currentIndex: root.sessionIndex
         opacity: 0; width: 100; height: 100; z: -100
-        delegate: Item { property string name: model.name || "" }
+        delegate: Item { property string sName: model.name || "" }
     }
 
     // Background Video
@@ -64,8 +64,12 @@ Rectangle {
             source: "bg.mp4"
             loops: MediaPlayer.Infinite
             autoPlay: true
-            audioOutput: AudioOutput { volume: 0.7 }
+            audioOutput: audioOut
             videoOutput: bgVideoOutput
+        }
+        AudioOutput { 
+            id: audioOut
+            volume: 0.7 
         }
         VideoOutput {
             id: bgVideoOutput
@@ -193,8 +197,8 @@ Rectangle {
                 
                 Text {
                     text: {
-                        var realName = userModel.data(userModel.index(root.userIndex, 0), Qt.UserRole + 1)
-                        return (realName ? realName.toUpperCase() : "TRAILBLAZER")
+                        var name = userModel.data(userModel.index(root.userIndex, 0), Qt.UserRole + 1) || userModel.lastUser || "USER"
+                        return name.toUpperCase()
                     }
                     font.family: mainFont.name; font.pixelSize: 18 * s
                     font.bold: true; color: "white"; font.letterSpacing: 0.4 * s
@@ -464,7 +468,9 @@ Rectangle {
                         }
 
                         Text {
-                            text: (sessionHelper.currentItem && sessionHelper.currentItem.name) ? sessionHelper.currentItem.name : "Session"
+                            text: (sessionModel && sessionModel.count > root.sessionIndex && root.sessionIndex >= 0)
+                                  ? sessionHelper.currentItem.sName
+                                  : "Select Session"
                             font.family: mainFont.name; font.pixelSize: 17 * s
                             color: "white"; anchors.verticalCenter: parent.verticalCenter
                         }

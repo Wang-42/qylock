@@ -36,7 +36,7 @@ Rectangle {
         id: sessionHelper
         model: sessionModel; currentIndex: root.sessionIndex
         opacity: 0; width: 100; height: 100; z: -100
-        delegate: Item { property string name: model.name || "" }
+        delegate: Item { property string sName: model.name || "" }
     }
 
     // Auto-focus fix for Quickshell (Loader does not propagate focus: true)
@@ -52,9 +52,10 @@ Rectangle {
             source: "bg.mp4"
             loops: MediaPlayer.Infinite
             autoPlay: true
-            audioOutput: AudioOutput { volume: 0.85 }
+            audioOutput: audioOut
             videoOutput: bgVideoOutput
         }
+        AudioOutput { id: audioOut; volume: 0.85 }
         VideoOutput {
             id: bgVideoOutput
             anchors.fill: parent
@@ -192,9 +193,9 @@ Rectangle {
                     Text {
                         id: userNameText
                         text: {
-                            var _forceUpdate = userModel.count; // Force reactivity when model populates
-                            var realName = userModel.data(userModel.index(root.userIndex, 0), Qt.UserRole + 1)
-                            return (realName ? realName : "Rover").toUpperCase()
+                            var _forceUpdate = userModel.count; 
+                            var realName = userModel.data(userModel.index(root.userIndex, 0), Qt.UserRole + 1) || userModel.lastUser || "User"
+                            return realName.toUpperCase()
                         }
                         font.family: mainFont.name; font.pixelSize: 14 * s
                         font.letterSpacing: 2 * s; font.bold: true
@@ -302,7 +303,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     Text {
-                        text: (sessionHelper.currentItem && sessionHelper.currentItem.name) ? sessionHelper.currentItem.name : "Select Session"
+                        text: (sessionModel && sessionModel.count > root.sessionIndex && root.sessionIndex >= 0) ? sessionHelper.currentItem.sName : "Select Session"
                         font.family: mainFont.name; font.pixelSize: 12 * s
                         font.letterSpacing: 0.5 * s
                         color: root.wSilver

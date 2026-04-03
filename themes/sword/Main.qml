@@ -271,7 +271,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
             }
             Text {
-                text: (sessionHelper.currentItem && sessionHelper.currentItem.sName)
+                text: (sessionModel && sessionModel.count > root.sessionIndex && root.sessionIndex >= 0)
                       ? sessionHelper.currentItem.sName
                       : "Session"
                 color: "white"

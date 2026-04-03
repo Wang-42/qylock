@@ -65,7 +65,7 @@ Rectangle {
     Row {
         anchors.top: parent.top; anchors.right: parent.right; anchors.margins: 40 * s; spacing: 30 * s; opacity: root.ui
         Repeater {
-            model: [{l: (sessionHelper.currentItem ? sessionHelper.currentItem.sName : "SESSION").toUpperCase(), a: 2}, {l: "REBOOT", a: 0}, {l: "OFF", a: 1}]
+            model: [{l: (sessionHelper.currentItem && sessionHelper.currentItem.sName ? sessionHelper.currentItem.sName : "Session").toUpperCase(), a: 2}, {l: "REBOOT", a: 0}, {l: "OFF", a: 1}]
             delegate: Item {
                 width: pmt.implicitWidth; height: 30 * s
                 Text {

@@ -46,10 +46,10 @@ Rectangle {
 
     // Session Helper
     ListView {
-        id: sessionNameHelper
+        id: sessionHelper
         model: sessionModel; currentIndex: root.sessionIndex
         visible: false; width: 0 * s; height: 0 * s
-        delegate: Item { property string sessionName: model.name || "" }
+        delegate: Item { property string sName: model.name || "" }
     }
 
     Connections {
@@ -403,8 +403,8 @@ Rectangle {
                                     
                                     Text {
                                         anchors.centerIn: parent
-                                        text: (sessionNameHelper.currentItem && sessionNameHelper.currentItem.sessionName) 
-                                              ? sessionNameHelper.currentItem.sessionName.toUpperCase() 
+                                        text: (sessionModel && sessionModel.count > root.sessionIndex && root.sessionIndex >= 0) 
+                                              ? sessionHelper.currentItem.sName.toUpperCase() 
                                               : "SEARCHING..."
                                         font.family: root.fontName
                                         font.pixelSize: 12 * s

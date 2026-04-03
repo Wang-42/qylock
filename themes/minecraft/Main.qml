@@ -98,11 +98,11 @@ Rectangle {
 
     // Session Helper
     ListView {
-        id: sessionNameHelper
+        id: sessionHelper
         model: sessionModel
         currentIndex: sessionIndex
         visible: false; width: 0 * s; height: 0 * s
-        delegate: Item { property string sessionName: model.name || "" }
+        delegate: Item { property string sName: model.name || "" }
     }
 
     // UI Stack
@@ -213,8 +213,7 @@ Rectangle {
                     interval: 60000; running: true; repeat: true
                     onTriggered: clockDate.label = Qt.formatDate(new Date(), "dddd, MMMM d")
                 }
-                Component.onCompleted: clockDate.label = Qt.formatDate(new Date(), "dddd, MMMM d")
-            }
+            Component.onCompleted: clockDate.label = Qt.formatDate(new Date(), "dddd, MMMM d")
         }
 
             // User Area
@@ -248,7 +247,6 @@ Rectangle {
                     }
                 }
             }
-        }
 
             // Password Area
 
@@ -291,7 +289,6 @@ Rectangle {
                     }
                 }
             }
-        }
 
         // MESSAGE
         Text {
@@ -329,9 +326,7 @@ Rectangle {
                 id: sessionBtn
                 width: parent.width
                 height: 44 * s
-                label: (sessionNameHelper.currentItem
-                        ? sessionNameHelper.currentItem.sessionName
-                        : "Select Session")
+                label: (sessionHelper.currentItem && sessionHelper.currentItem.sName ? sessionHelper.currentItem.sName : "Session")
                      + (sessionDropdown.visible ? "  ▲" : "  ▼")
                 KeyNavigation.backtab: loginBtn
                 KeyNavigation.tab: shutdownBtn
@@ -341,7 +336,8 @@ Rectangle {
             // Dropdown
             Item {
                 id: sessionDropdown
-                opacity: 0; width: 100; height: 100; z: -100
+                visible: false
+                opacity: visible ? 1 : 0; z: visible ? 100 : -100
                 width: parent.width
                 height: Math.min(sessionModel.rowCount() * 38, 152)
                 // opens ABOVE the session button
