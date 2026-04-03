@@ -123,7 +123,7 @@ Rectangle {
                 Rectangle { width: 6 * s; height: 6 * s; color: root.isDarkTheme ? "#1a243d" : "white"; anchors.centerIn: parent }
             }
             Text {
-                text: (userModel.data(userModel.index(userModel.lastIndex, 0), Qt.UserRole + 1) || "Traveler").toUpperCase()
+                text: (activeUser || "USER").toUpperCase()
                 font.family: mainFont.name; font.pixelSize: 16 * s; font.letterSpacing: 2 * s
                 color: root.gTextMain; font.bold: true
                 style: Text.Outline; styleColor: root.isDarkTheme ? "#aa000000" : "#44ffffff"

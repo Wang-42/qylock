@@ -198,7 +198,7 @@ Rectangle {
                 Text {
                     text: {
                         var realName = userModel.data(userModel.index(root.userIndex, 0), Qt.UserRole + 1)
-                        return (realName ? realName.toUpperCase() : "TRAILBLAZER")
+                        return (realName ? realName.toUpperCase() : (userModel.lastUser || "USER").toUpperCase())
                     }
                     font.family: mainFont.name; font.pixelSize: 18 * s
                     font.bold: true; color: "white"; font.letterSpacing: 0.4 * s
