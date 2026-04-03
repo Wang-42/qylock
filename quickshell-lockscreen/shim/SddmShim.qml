@@ -32,7 +32,7 @@ Item {
                         }
                     }
                 }
-                // Fallback: garantir que sempre exista um background padrão
+                // Fallback: ensure a default background always exists
                 if (!newConfig.background) {
                     newConfig.background = "bg.png";
                 }
@@ -44,7 +44,7 @@ Item {
             xhr.open("GET", url, true);
             xhr.send();
         } catch (e) {
-            console.warn("SddmShim: falha ao carregar theme.conf:", e);
+            console.warn("SddmShim: failed to load theme.conf:", e);
             config = { background: "bg.png" };
             configReady = true;
         }
@@ -82,7 +82,7 @@ Item {
         property int lastIndex: 0
     }
 
-    // Processo para enumerar sessões desktop do sistema
+    // Process to enumerate system desktop sessions
     Process {
         id: sessionEnumerator
         command: [
@@ -99,7 +99,7 @@ Item {
         }
 
         onExited: (exitCode, exitStatus) => {
-            // Se o processo falhou sem produzir saída, garantir fallback
+            // If process failed without output, ensure fallback
             if (internalSessionModel.count === 0) {
                 internalSessionModel.append({ name: "Unknown", file: "unknown.desktop" });
             }
@@ -128,7 +128,7 @@ Item {
             }
         }
 
-        // Fallback se nenhuma sessão válida foi encontrada
+        // Fallback if no valid sessions were found
         if (added === 0) {
             internalSessionModel.append({ name: "Unknown", file: "unknown.desktop" });
         }
