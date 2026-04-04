@@ -12,8 +12,8 @@ Rectangle {
     property int userIndex: userModel.lastIndex >= 0 ? userModel.lastIndex : 0
     property real ui: 0
 
-    readonly property color emerald: "#00E38E"
-    readonly property color mint: "#74FFA4"
+    readonly property color emerald: "#34FFB2"
+    readonly property color mint: "#34FFD6"
 
     FolderListModel { id: fontFolder; folder: Qt.resolvedUrl("font"); nameFilters: ["*.ttf", "*.otf"] }
     FontLoader { id: pf; source: fontFolder.count > 0 ? "font/" + fontFolder.get(0, "fileName") : "" }
@@ -76,7 +76,7 @@ Rectangle {
         // Login Action
         Item {
             width: 140 * s; height: 36 * s
-            Rectangle { anchors.fill: parent; color: sbm.containsMouse ? root.emerald : "transparent"; border.color: root.emerald; border.width: 1; radius: 4 * s; Behavior on color { ColorAnimation { duration: 150 } } }
+            Rectangle { anchors.fill: parent; color: sbm.containsMouse ? root.emerald : "transparent"; border.color: root.emerald; border.width: 2; radius: 4 * s; Behavior on color { ColorAnimation { duration: 150 } } }
             Text { anchors.centerIn: parent; text: "LOG IN"; color: sbm.containsMouse ? "#000" : root.mint; font.family: pf.name; font.pixelSize: 12 * s; font.letterSpacing: 4 * s; Behavior on color { ColorAnimation { duration: 150 } } }
             MouseArea { id: sbm; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: doLogin() }
         }
@@ -91,7 +91,7 @@ Rectangle {
             model: [{l: (sessionHelper.currentItem && sessionHelper.currentItem.sName ? sessionHelper.currentItem.sName : "Session").toUpperCase(), a: 2}, {l: "RESTART", a: 0}, {l: "POWER", a: 1}]
             delegate: Item {
                 width: pmt.implicitWidth + 20 * s; height: 26 * s
-                Rectangle { anchors.fill: parent; color: "transparent"; border.color: root.emerald; border.width: 1 * s; opacity: pm.containsMouse ? 1.0 : 0.4; radius: 4 * s; Rectangle { anchors.fill: parent; anchors.margins: 1 * s; color: root.emerald; radius: 3 * s; opacity: pm.containsMouse ? 0.3 : 0 } }
+                Rectangle { anchors.fill: parent; color: "transparent"; border.color: root.emerald; border.width: 2 * s; opacity: pm.containsMouse ? 1.0 : 0.4; radius: 4 * s; Rectangle { anchors.fill: parent; anchors.margins: 1 * s; color: root.emerald; radius: 3 * s; opacity: pm.containsMouse ? 0.3 : 0 } }
                 Text { id: pmt; anchors.centerIn: parent; text: modelData.l; color: "white"; font.family: pf.name; font.pixelSize: 10 * s; font.letterSpacing: 2 * s }
                 MouseArea { id: pm; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: { if (modelData.a === 0) sddm.reboot(); else if (modelData.a === 1) sddm.powerOff(); else if (sessionModel && sessionModel.rowCount() > 0) root.sessionIndex = (root.sessionIndex + 1) % sessionModel.rowCount() } }
             }
