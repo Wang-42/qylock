@@ -217,14 +217,6 @@ Point your Window Manager keybind (e.g., in Hyprland, Qtile, Sway, or i3) direct
         <img src="./Assets/win7.gif" width="100%" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"/>
       </td>
     </tr>
-    <tr>
-      <td align="center" width="50%" style="padding: 15px; border: none;">
-        <b>TUI</b><br><br>
-        <img src="./Assets/tui.gif" width="100%" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"/>
-      </td>
-      <td align="center" width="50%" style="padding: 15px; border: none;">
-      </td>
-    </tr>
   </table>
 </div>
 
