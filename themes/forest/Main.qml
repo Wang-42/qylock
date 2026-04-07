@@ -11,7 +11,7 @@ Item {
     width: 1920; height: 1080
     readonly property real s: width / 1920
     
-    // AMBIENT ACCENT
+    // THEME COLORS
     readonly property color fgColor: "#ffffff"
     readonly property color accentColor: "#d3eaad" 
     
@@ -37,7 +37,7 @@ Item {
 
     Timer { interval: 300; running: true; onTriggered: passInput.forceActiveFocus() }
 
-    // BACKGROUND
+    // BACKGROUND ENGINE
     Rectangle { anchors.fill: parent; color: "#010801"; z: -1000 }
     
     MediaPlayer {
@@ -49,22 +49,22 @@ Item {
 
 
     // GLASS ENGINE
-    ShaderEffectSource { id: baseVideoSource; sourceItem: bgVideo; visible: false; live: true }
-    FastBlur { id: globalGlassBlur; anchors.fill: parent; source: baseVideoSource; radius: 85; z: -1000; visible: true }
+    ShaderEffectSource { id: baseVideoSource; sourceItem: bgVideo; visible: false; live: true; recursive: false }
+    FastBlur { id: globalGlassBlur; anchors.fill: parent; source: baseVideoSource; radius: 96; z: -1000; visible: true }
 
     component LiquidGlass: Item {
         id: lg
-        property real glassRadius: 35 * s
-        property color glassTint: "#95081508" 
+        property real glassRadius: 22 * s
+        property color glassTint: "#55101a10"
         property real borderWidth: 1.0 * s
-        property real blurBrightness: -0.20 
-        property color topRimColor: "#ffffff" 
-        property color bottomRimColor: "#55ffffff" 
+        property real blurBrightness: -0.10
+        property color topRimColor: "#ccffffff"
         
-        Behavior on blurBrightness { NumberAnimation { duration: 400 } }
+        Behavior on blurBrightness { NumberAnimation { duration: 300 } }
         anchors.fill: parent
         
         Rectangle { id: maskRect; anchors.fill: parent; radius: lg.glassRadius; visible: false }
+
         ShaderEffectSource {
             id: localBlur; sourceItem: globalGlassBlur; visible: false
             sourceRect: {
@@ -74,48 +74,57 @@ Item {
         }
 
         BrightnessContrast {
-            id: brightnessEffect; anchors.fill: parent; source: localBlur; visible: false
+            id: darkenEffect; anchors.fill: parent; source: localBlur; visible: false
             brightness: lg.blurBrightness
+            contrast: 0.10
         }
 
-        OpacityMask { anchors.fill: parent; source: brightnessEffect; maskSource: maskRect }
-        
-        Rectangle {
-            anchors.fill: parent; opacity: 1.0; visible: true
-            gradient: Gradient {
-                orientation: Gradient.Horizontal
-                GradientStop { position: 0.0; color: "#45ffffff" } 
-                GradientStop { position: 0.25; color: "#00000000" } 
-                GradientStop { position: 0.7; color: "#00000000" } 
-                GradientStop { position: 1.0; color: "#15000000" } 
-            }
-            layer.enabled: true; layer.effect: OpacityMask { maskSource: maskRect }
-        }
-        
+        OpacityMask { anchors.fill: parent; source: darkenEffect; maskSource: maskRect }
+
         Rectangle { anchors.fill: parent; radius: lg.glassRadius; color: lg.glassTint }
 
-        Rectangle { id: topRim; anchors.fill: parent; radius: lg.glassRadius; color: "transparent"; border.color: lg.topRimColor; border.width: lg.borderWidth; visible: false }
         Rectangle {
-            id: topFade; anchors.fill: parent; visible: false
-            gradient: Gradient { 
-                GradientStop { position: 0.0; color: "white" }
-                GradientStop { position: 1.0; color: "transparent" } 
+            id: topRimSrc
+            anchors.fill: parent
+            radius: lg.glassRadius
+            color: "transparent"
+            border.color: lg.topRimColor
+            border.width: lg.borderWidth
+            visible: false
+        }
+        Rectangle {
+            id: topRimMask
+            anchors.fill: parent
+            visible: false
+            gradient: Gradient {
+                GradientStop { position: 0.0;  color: "white" }
+                GradientStop { position: 0.08; color: "transparent" }
             }
         }
-        OpacityMask { anchors.fill: parent; source: topRim; maskSource: topFade }
+        OpacityMask { anchors.fill: parent; source: topRimSrc; maskSource: topRimMask }
 
-        Rectangle { id: bottomRim; anchors.fill: parent; radius: lg.glassRadius; color: "transparent"; border.color: lg.bottomRimColor; border.width: lg.borderWidth; visible: false }
         Rectangle {
-            id: bottomFade; anchors.fill: parent; visible: false
-            gradient: Gradient { 
-                GradientStop { position: 0.0; color: "transparent" }
-                GradientStop { position: 1.0; color: "white" } 
+            id: bottomRimSrc
+            anchors.fill: parent
+            radius: lg.glassRadius
+            color: "transparent"
+            border.color: "#40ffffff"
+            border.width: lg.borderWidth
+            visible: false
+        }
+        Rectangle {
+            id: bottomRimMask
+            anchors.fill: parent
+            visible: false
+            gradient: Gradient {
+                GradientStop { position: 0.92; color: "transparent" }
+                GradientStop { position: 1.0;  color: "white" }
             }
         }
-        OpacityMask { anchors.fill: parent; source: bottomRim; maskSource: bottomFade }
+        OpacityMask { anchors.fill: parent; source: bottomRimSrc; maskSource: bottomRimMask }
     }
 
-    // 1. TOP-LEFT CLOCK
+    // CLOCK SECTION
     Item {
         id: clockPebble
         x: 100 * s; y: 100 * s
@@ -123,9 +132,9 @@ Item {
         opacity: root.uiOpacity
         scale: 1.0
         
-        layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: "#2a000000"; radius: 60*s; samples: 81; verticalOffset: 12 * s }
+        layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: "#35000000"; radius: 30*s; samples: 81; verticalOffset: 10 * s }
         
-        LiquidGlass { glassRadius: 30 * s; blurBrightness: -0.25 } 
+        LiquidGlass { glassRadius: 25 * s }
     
         Column {
             anchors.centerIn: parent; anchors.verticalCenterOffset: -8 * s; spacing: 5 * s
@@ -141,32 +150,34 @@ Item {
         }
     }
 
-    // 2. BOTTOM-RIGHT PANEL
+    // LOGIN SECTION
     Item {
         id: mainPanelStack
         anchors.right: parent.right; anchors.bottom: parent.bottom; anchors.margins: 100 * s
         width: 440 * s; height: 335 * s
         opacity: root.uiOpacity
 
-        // PEBBLE 1: USER 
+        // USER BLOCK
         Item {
             id: userMorpher; width: parent.width; height: root.userPopupOpen ? 325 * s : 75 * s; y: 0
             opacity: root.sessionPopupOpen ? 0.0 : 1.0; z: root.userPopupOpen ? 100 : 1
             Behavior on opacity { NumberAnimation { duration: 400 } }
             Behavior on y { NumberAnimation { duration: 500; easing.type: Easing.OutQuart } }
             Behavior on height { NumberAnimation { duration: 500; easing.type: Easing.OutQuart } }
-            layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: "#2a000000"; radius: root.userPopupOpen ? 45*s : 30*s; verticalOffset: 10 * s }
+            layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: "#35000000"; radius: root.userPopupOpen ? 45*s : 30*s; verticalOffset: 10 * s }
             
             LiquidGlass { 
-                glassRadius: 20 * s 
-                blurBrightness: root.userPopupOpen ? -0.45 : (userMouse.containsMouse ? -0.25 : -0.35)
-                topRimColor: (userMouse.containsMouse || root.userPopupOpen) ? "#ffffff" : "#ccffffff"
+                glassRadius: 22 * s 
+                blurBrightness: root.userPopupOpen ? -0.25 : (userMouse.containsMouse ? -0.05 : -0.10)
+                topRimColor: (userMouse.containsMouse || root.userPopupOpen) ? "#ffffffff" : "#ccffffff"
             }
 
             property real morphRatio: root.userPopupOpen ? 1.0 : 0.0; Behavior on morphRatio { NumberAnimation { duration: 500; easing.type: Easing.OutQuart } }
 
             Row {
-                anchors.fill: parent; anchors.leftMargin: 20 * s; spacing: 15 * s; visible: userMorpher.morphRatio < 0.99; opacity: 1.0 - userMorpher.morphRatio; scale: 1.0 - (userMorpher.morphRatio * 0.2)
+                id: compactUserContent
+                anchors.left: parent.left; anchors.top: parent.top; anchors.leftMargin: 20 * s; anchors.topMargin: 15 * s; height: 45 * s; spacing: 15 * s
+                visible: userMorpher.morphRatio < 0.99; opacity: 1.0 - userMorpher.morphRatio
                 Rectangle {
                     width: 45 * s; height: 45 * s; radius: 22.5 * s; color: root.accentColor; anchors.verticalCenter: parent.verticalCenter
                     Text { anchors.centerIn: parent; text: (userHelper.currentItem && userHelper.currentItem.uName ? userHelper.currentItem.uName[0] : "A").toUpperCase(); font.pixelSize: 18 * s; font.weight: Font.Black; color: "#0d1b0d" }
@@ -178,7 +189,7 @@ Item {
                 }
             }
             Column {
-                anchors.fill: parent; anchors.margins: 20 * s; visible: opacity > 0.01; opacity: userMorpher.morphRatio; scale: 0.9 + (userMorpher.morphRatio * 0.1); spacing: 15 * s
+                anchors.left: parent.left; anchors.right: parent.right; anchors.top: parent.top; anchors.margins: 20 * s; visible: opacity > 0.01; opacity: userMorpher.morphRatio; spacing: 15 * s
                 Text { text: "ACCOUNT"; font.family: mainFont.name; font.pixelSize: 13 * s; color: root.accentColor; anchors.horizontalCenter: parent.horizontalCenter; font.letterSpacing: 3 * s; opacity: 0.8 }
                 ListView {
                     width: parent.width; height: 120 * s; model: userModel; clip: true; spacing: 5 * s
@@ -198,26 +209,56 @@ Item {
             Behavior on scale { NumberAnimation { duration: 300; easing.type: Easing.OutBack } }
         }
 
-        // PEBBLE 2: PASSWORD
+        // PASS FIELD
         Item {
             id: passwordCard; width: parent.width; height: 75 * s; y: 95 * s
             opacity: (root.sessionPopupOpen || root.userPopupOpen) ? 0.0 : 1.0
-            layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: passInput.activeFocus ? "#33d3eaad" : "#2a000000"; radius: 30*s; verticalOffset: 8 * s }
+            layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: passInput.activeFocus ? "#33d3eaad" : "#35000000"; radius: 30*s; verticalOffset: 8 * s }
             Behavior on opacity { NumberAnimation { duration: 400 } }
             LiquidGlass {
-                glassRadius: 20 * s; blurBrightness: passInput.activeFocus ? -0.15 : -0.35 
-                topRimColor: passInput.activeFocus ? root.accentColor : "#ffffff"; borderWidth: passInput.activeFocus ? 2.5 * s : 1.0 * s
+                glassRadius: 22 * s
+                blurBrightness: passInput.activeFocus ? -0.05 : -0.10
+                topRimColor: passInput.activeFocus ? root.accentColor : "#ccffffff"
+                borderWidth: passInput.activeFocus ? 1.5 * s : 1.0 * s
             }
             TextInput {
                 id: passInput; anchors.fill: parent; anchors.leftMargin: 25 * s; anchors.rightMargin: 25 * s
+                anchors.verticalCenterOffset: 2 * s
                 verticalAlignment: TextInput.AlignVCenter; echoMode: TextInput.Password; passwordCharacter: "●"
                 font.family: mainFont.name; font.pixelSize: 22 * s; color: root.accentColor; clip: true; focus: true; selectionColor: "white"
-                font.letterSpacing: 2 * s; onAccepted: root.login()
-                Text { text: "Enter Passcode"; anchors.fill: parent; verticalAlignment: Text.AlignVCenter; color: "white"; font.italic: true; opacity: 0.3; visible: !parent.text && !parent.activeFocus; font.pixelSize: 18 * s }
+                font.letterSpacing: 4 * s; onAccepted: root.login()
+                property bool wasClicked: false
+                onActiveFocusChanged: if (!activeFocus && text.length === 0) wasClicked = false
+                cursorVisible: false; cursorDelegate: Item { width: 0; height: 0 }
+                Text { 
+                    text: "Enter Passcode"; anchors.fill: parent; verticalAlignment: Text.AlignVCenter; color: "white"; font.italic: true; font.pixelSize: 18 * s
+                    opacity: passInput.text.length === 0 ? 0.3 : 0
+                    Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.InOutSine } }
+                }
+                Rectangle {
+                    id: customCursor
+                    width: 2.2 * s; height: 26 * s
+                    color: root.accentColor
+                    anchors.verticalCenter: parent.verticalCenter
+                    x: passInput.cursorRectangle.x - width/2 + 2 * s
+                    visible: passInput.focus && (passInput.text.length > 0 || passInput.wasClicked)
+                    SequentialAnimation {
+                        loops: Animation.Infinite; running: customCursor.visible
+                        NumberAnimation { target: customCursor; property: "opacity"; from: 1; to: 0.05; duration: 450 }
+                        NumberAnimation { target: customCursor; property: "opacity"; from: 0.05; to: 1; duration: 450 }
+                    }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        passInput.forceActiveFocus()
+                        passInput.wasClicked = true
+                    }
+                }
             }
         }
 
-        // LOGIN ARROW PEBBLE (UNCONSTRAINED)
+        // ENTER KEY
         Item {
             anchors.right: parent.right; anchors.rightMargin: 15 * s; y: 95 * s + 15 * s // Centered in the 75px row
             width: 44 * s; height: 1.0 * width; z: 50
@@ -225,31 +266,34 @@ Item {
             scale: innerLoginMouse.containsMouse ? 1.15 : 1.0; Behavior on scale { NumberAnimation { duration: 300; easing.type: Easing.OutBack } }
             Behavior on opacity { NumberAnimation { duration: 300 } }
             
-            LiquidGlass { glassRadius: width/2; blurBrightness: innerLoginMouse.containsMouse ? -0.15 : -0.25; topRimColor: innerLoginMouse.containsMouse ? root.accentColor : "#ffffff" }
+            layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: "#45000000"; radius: 20*s; verticalOffset: 5 * s }
+
+            LiquidGlass { glassRadius: width/2; blurBrightness: innerLoginMouse.containsMouse ? -0.05 : -0.10; topRimColor: innerLoginMouse.containsMouse ? root.accentColor : "#ccffffff" }
             Text { anchors.centerIn: parent; text: "→"; font.pixelSize: 22 * s; color: "white"; opacity: innerLoginMouse.containsMouse ? 1.0 : 0.7 }
             MouseArea { id: innerLoginMouse; anchors.fill: parent; hoverEnabled: true; onClicked: root.login(); cursorShape: Qt.PointingHandCursor }
         }
 
-        // PEBBLE 3: SESSION 
+        // SESSION AREA
         Item {
             id: sessionMorpher; width: parent.width; height: root.sessionPopupOpen ? 335 * s : 75 * s; y: root.sessionPopupOpen ? 0 : 190 * s
             opacity: root.userPopupOpen ? 0.0 : 1.0; z: root.sessionPopupOpen ? 100 : 1
             Behavior on opacity { NumberAnimation { duration: 400 } }
             Behavior on y { NumberAnimation { duration: 500; easing.type: Easing.OutQuart } }
             Behavior on height { NumberAnimation { duration: 500; easing.type: Easing.OutQuart } }
-            layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: "#2a000000"; radius: root.sessionPopupOpen ? 45*s : 30*s; verticalOffset: 10 * s }
+            layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: "#35000000"; radius: root.sessionPopupOpen ? 45*s : 30*s; verticalOffset: 10 * s }
             
-            LiquidGlass { glassRadius: 20 * s; blurBrightness: root.sessionPopupOpen ? -0.45 : (sessMouse.containsMouse ? -0.25 : -0.35); topRimColor: (sessMouse.containsMouse || root.sessionPopupOpen) ? "#ffffff" : "#ccffffff" }
+            LiquidGlass { glassRadius: 22 * s; blurBrightness: root.sessionPopupOpen ? -0.25 : (sessMouse.containsMouse ? -0.05 : -0.10); topRimColor: (sessMouse.containsMouse || root.sessionPopupOpen) ? "#ffffffff" : "#ccffffff" }
 
             property real morphRatio: root.sessionPopupOpen ? 1.0 : 0.0; Behavior on morphRatio { NumberAnimation { duration: 500; easing.type: Easing.OutQuart } }
 
             Text { 
-                anchors.centerIn: parent; visible: sessionMorpher.morphRatio < 0.99; opacity: (1.0 - sessionMorpher.morphRatio)
-                scale: 1.0 - (sessionMorpher.morphRatio * 0.2); text: (sessionHelper.currentItem && sessionHelper.currentItem.sName ? sessionHelper.currentItem.sName : "SESSION").toUpperCase()
+                anchors.top: parent.top; anchors.horizontalCenter: parent.horizontalCenter; anchors.topMargin: 27 * s
+                visible: sessionMorpher.morphRatio < 0.99; opacity: (1.0 - sessionMorpher.morphRatio)
+                text: (sessionHelper.currentItem && sessionHelper.currentItem.sName ? sessionHelper.currentItem.sName : "SESSION").toUpperCase()
                 font.family: mainFont.name; font.pixelSize: 15 * s; font.weight: Font.DemiBold; color: root.accentColor; font.letterSpacing: 2 * s
             }
             Column {
-                anchors.fill: parent; anchors.margins: 20 * s; visible: opacity > 0.01; opacity: sessionMorpher.morphRatio; scale: 0.9 + (sessionMorpher.morphRatio * 0.1); spacing: 15 * s
+                anchors.left: parent.left; anchors.right: parent.right; anchors.top: parent.top; anchors.margins: 20 * s; visible: opacity > 0.01; opacity: sessionMorpher.morphRatio; spacing: 15 * s
                 Text { text: "SESSION"; font.family: mainFont.name; font.pixelSize: 13 * s; color: root.accentColor; anchors.horizontalCenter: parent.horizontalCenter; font.letterSpacing: 3 * s; opacity: 0.8 }
                 ListView {
                     width: parent.width; height: 120 * s; model: sessionModel; clip: true; spacing: 5 * s
@@ -266,19 +310,19 @@ Item {
             Behavior on scale { NumberAnimation { duration: 300; easing.type: Easing.OutBack } }
         }
 
-        // PEBBLE 4: ACTIONS
+        // ACTION BUTTONS
         Row {
             width: parent.width; height: 50 * s; y: 285 * s; spacing: 20 * s
             opacity: (root.sessionPopupOpen || root.userPopupOpen) ? 0.0 : 1.0
             Behavior on opacity { NumberAnimation { duration: 400 } }
-            Item { id: rebootBtn; x:0; y:0; width: (parent.width / 2) - 10 * s; height: 50 * s; layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: "#2a000000"; radius: 25*s; verticalOffset: 8 * s }
-                LiquidGlass { glassRadius: 15 * s; blurBrightness: -0.35; topRimColor: "#ccffffff" }
+            Item { id: rebootBtn; x:0; y:0; width: (parent.width / 2) - 10 * s; height: 50 * s; layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: "#35000000"; radius: 25*s; verticalOffset: 8 * s }
+                LiquidGlass { glassRadius: 18 * s; blurBrightness: restMouse.containsMouse ? 0.20 : 0.10; glassTint: "#30101a10"; topRimColor: "#ccffffff" }
                 Text { anchors.centerIn: parent; text: "REBOOT"; font.family: mainFont.name; font.pixelSize: 15 * s; font.weight: Font.DemiBold; color: "white"; opacity: restMouse.containsMouse ? 1.0 : 0.8 }
                 MouseArea { id: restMouse; anchors.fill: parent; hoverEnabled: true; onClicked: sddm.reboot(); cursorShape: Qt.PointingHandCursor; onPressed: rebootBtn.scale = 0.98; onReleased: rebootBtn.scale = 1.0 }
                 Behavior on scale { NumberAnimation { duration: 300; easing.type: Easing.OutBack } }
             }
-            Item { id: powerBtn; x:0; y:0; width: (parent.width / 2) - 10 * s; height: 50 * s; layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: "#2a000000"; radius: 25*s; verticalOffset: 8 * s }
-                LiquidGlass { glassRadius: 15 * s; blurBrightness: -0.35; topRimColor: "#ccffffff" }
+            Item { id: powerBtn; x:0; y:0; width: (parent.width / 2) - 10 * s; height: 50 * s; layer.enabled: true; layer.effect: DropShadow { transparentBorder: true; color: "#35000000"; radius: 25*s; verticalOffset: 8 * s }
+                LiquidGlass { glassRadius: 18 * s; blurBrightness: shutMouse.containsMouse ? 0.20 : 0.10; glassTint: "#30101a10"; topRimColor: "#ccffffff" }
                 Text { anchors.centerIn: parent; text: "POWER"; font.family: mainFont.name; font.pixelSize: 15 * s; font.weight: Font.DemiBold; color: "white"; opacity: shutMouse.containsMouse ? 1.0 : 0.8 }
                 MouseArea { id: shutMouse; anchors.fill: parent; hoverEnabled: true; onClicked: sddm.powerOff(); cursorShape: Qt.PointingHandCursor; onPressed: powerBtn.scale = 0.98; onReleased: powerBtn.scale = 1.0 }
                 Behavior on scale { NumberAnimation { duration: 300; easing.type: Easing.OutBack } }

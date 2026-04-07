@@ -101,14 +101,14 @@ if ! command -v fzf &> /dev/null; then
     if [[ "$SELECTION" =~ ^[0-9]+$ ]] && [ "$SELECTION" -ge 1 ] && [ "$SELECTION" -le "${#THEMES[@]}" ]; then
         THEME_NAME="${THEMES[$((SELECTION-1))]}"
     else
-        error "Invalid selection. Defaulting to 'Genshin'."
-        THEME_NAME="Genshin"
+        error "Invalid selection. Defaulting to 'nier-automata'."
+        THEME_NAME="nier-automata"
     fi
 else
     THEME_NAME=$(ls -1 "$THEMES_DIR" | fzf --prompt="Select theme: " --height=15 --reverse --border --header="Use arrow keys/Enter to select lockscreen theme")
     if [ -z "$THEME_NAME" ]; then
-        error "No theme selected. Defaulting to 'Genshin'."
-        THEME_NAME="Genshin"
+        error "No theme selected. Defaulting to 'nier-automata'."
+        THEME_NAME="nier-automata"
     fi
 fi
 
@@ -184,6 +184,11 @@ if [ "$FONT_COUNT" -eq 0 ]; then
     echo -e "${C_YELLOW}${C_BOLD} │${C_RESET}  ${C_ACCENT}$THEMES_DIR/$THEME_NAME/font/${C_RESET}"
     echo -e "${C_YELLOW}${C_BOLD} ╰─ ${C_DIM}Refer to README.md for font suggestions.${C_RESET}\n"
 fi
+
+# Save theme choice
+mkdir -p "$HOME/.config/qylock"
+echo "$THEME_NAME" > "$HOME/.config/qylock/theme"
+substep "Configuration saved to ~/.config/qylock/theme"
 
 sed -i "s|export QS_THEME=.*$|export QS_THEME=\"\${1:-$THEME_NAME}\"|" "$TARGET_DIR/lock.sh"
 success "Theme '$THEME_NAME' set as lockscreen default!"

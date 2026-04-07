@@ -8,8 +8,8 @@ import "./shim"
 ShellRoot {
     id: shellRoot
 
-    property string activeTheme: Quickshell.env("QS_THEME") || "Genshin"
-    property string themePath: Quickshell.shellDir + "/themes_link/" + activeTheme
+    property string activeTheme: Quickshell.env("QS_THEME") || "nier-automata"
+    property string themePath: Quickshell.env("QS_THEME_PATH") || (Quickshell.shellDir + "/themes_link/" + activeTheme)
 
     readonly property var sddm: sddmShim.sddm
     readonly property var config: sddmShim.config
@@ -31,15 +31,13 @@ ShellRoot {
             shellRoot.authenticated = true
             shellRoot.sessionLocked = false
             
-            // Hyprland Hack: Explicitly tell the compositor that it's okay for
-            // the session lock to vanish. This stops the "Oopsie daisy" screen.
-            // Only execute if the compositor is Hyprland
+            // Hyprland session lock fix
             if (Quickshell.env("XDG_CURRENT_DESKTOP") === "Hyprland" || Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE") !== "") {
                 Quickshell.execDetached(["hyprctl", "keyword", "misc:allow_session_lock_restore", "1"]);
             }
             Quickshell.execDetached(["loginctl", "unlock-session"]);
 
-            // Transition gracefully like caelestia does.
+            // Transition and quit
             quitTimer.start()
         }
     }

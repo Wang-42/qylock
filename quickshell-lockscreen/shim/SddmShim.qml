@@ -32,7 +32,7 @@ Item {
                         }
                     }
                 }
-                // Fallback: ensure a default background always exists
+                // Default background fallback
                 if (!newConfig.background) {
                     newConfig.background = "bg.png";
                 }
@@ -89,12 +89,12 @@ Item {
             return item.name;
         }
         Component.onCompleted: {
-            // Initial placeholder to ensure ListView.currentItem isn't null
+            // Initial session placeholder
             append({ name: "Session", file: "" });
         }
     }
 
-    // Process to enumerate system desktop sessions
+    // Enumerate system sessions
     Process {
         id: sessionEnumerator
         command: [
@@ -114,7 +114,7 @@ Item {
         }
 
         onExited: (exitCode, exitStatus) => {
-            // If process failed without output, ensure fallback
+            // No sessions fallback
             if (internalSessionModel.count === 0) {
                 internalSessionModel.append({ name: "Unknown", file: "unknown.desktop" });
             }
@@ -142,7 +142,7 @@ Item {
             if (parts.length === 2 && parts[0] !== "" && parts[1] !== "") {
                 internalSessionModel.append({ name: parts[0], file: parts[1] });
                 
-                // Try to match the current desktop session
+                // Match current desktop
                 var fileName = parts[1].toLowerCase();
                 if (currentDesktop !== "" && (fileName.indexOf(currentDesktop) !== -1 || currentDesktop.indexOf(fileName.replace(".desktop", "")) !== -1)) {
                     bestIndex = added;
@@ -151,7 +151,7 @@ Item {
             }
         }
 
-        // Fallback if no valid sessions were found
+        // Fallback for sessions
         if (added === 0) {
             internalSessionModel.append({ name: "Unknown", file: "unknown.desktop" });
         } else {
@@ -188,8 +188,7 @@ Item {
             if (result === PamResult.Success) {
                 shim.sddm.loginSucceeded();
                 Quickshell.execDetached(["loginctl", "unlock-session"]);
-                // Both emitting the signal for lock_shell.qml and calling
-                // loginctl to satisfy any external session monitors.
+                // Notify success handlers
             } else {
                 shim.sddm.loginFailed();
             }

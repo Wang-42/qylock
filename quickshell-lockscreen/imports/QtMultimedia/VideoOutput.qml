@@ -4,7 +4,7 @@ import QtMultimedia 6.0 as Native
 Native.VideoOutput {
     id: videoOut
     
-    // Shims for Qt5 constants for themes that use VideoOutput.PreserveAspectCrop
+    // Qt5 fill mode shims
     enum FillMode { 
         Stretch = 0, 
         PreserveAspectFit = 1, 
