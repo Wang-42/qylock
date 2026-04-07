@@ -55,7 +55,7 @@ Rectangle {
         // User Select
         Text {
             text: ((userHelper.currentItem && userHelper.currentItem.uName) ? userHelper.currentItem.uName : (userModel.lastUser || "User")).toUpperCase()
-            color: "white"; font.family: pf.name; font.pixelSize: 22 * s; font.letterSpacing: 3 * s
+            color: "white"; font.family: pf.name; font.pixelSize: 24 * s; font.letterSpacing: 3 * s
             layer.enabled: true; layer.effect: DropShadow { color: "#aa000000"; radius: 4; samples: 8; horizontalOffset: 1; verticalOffset: 1 }
             MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: { if (userModel && userModel.rowCount() > 0) root.userIndex = (root.userIndex + 1) % userModel.rowCount() } }
         }
@@ -92,7 +92,7 @@ Rectangle {
             model: [{l: (sessionHelper.currentItem && sessionHelper.currentItem.sName ? sessionHelper.currentItem.sName : "Session").toUpperCase(), a: 2}, {l: "RESTART", a: 0}, {l: "POWER", a: 1}]
             delegate: Item {
                 width: pmt.implicitWidth + 20 * s; height: 26 * s
-                Rectangle { anchors.fill: parent; color: "transparent"; border.color: root.emerald; border.width: 2 * s; opacity: pm.containsMouse ? 1.0 : 0.4; radius: 10 * s; Rectangle { anchors.fill: parent; anchors.margins: 1 * s; color: root.emerald; radius: 3 * s; opacity: pm.containsMouse ? 0.3 : 0 } }
+                Rectangle { anchors.fill: parent; color: "transparent"; border.color: root.emerald; border.width: 2 * s; opacity: pm.containsMouse ? 1.0 : 0.6; radius: 10 * s; Rectangle { anchors.fill: parent; anchors.margins: 1 * s; color: root.emerald; radius: 3 * s; opacity: pm.containsMouse ? 0.3 : 0 } }
                 Text { id: pmt; anchors.centerIn: parent; text: modelData.l; color: "white"; font.family: pf.name; font.pixelSize: 10 * s; font.letterSpacing: 2 * s }
                 MouseArea { id: pm; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: { if (modelData.a === 0) sddm.reboot(); else if (modelData.a === 1) sddm.powerOff(); else if (sessionModel && sessionModel.rowCount() > 0) root.sessionIndex = (root.sessionIndex + 1) % sessionModel.rowCount() } }
             }
