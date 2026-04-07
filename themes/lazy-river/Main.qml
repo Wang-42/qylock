@@ -62,12 +62,13 @@ Rectangle {
 
         // Pass Field
         Item {
-            width: parent.width; height: 36 * s
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1 * s; color: root.emerald; opacity: pwd.activeFocus ? 1.0 : 0.4 }
-            Rectangle { anchors.bottom: parent.bottom; width: pwd.activeFocus ? parent.width : 0; height: 2 * s; color: root.mint; Behavior on width { NumberAnimation {duration: 300; easing.type: Easing.OutExpo} } }
+            width: 200 * s; height: 36 * s
+            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1 * s; color: root.emerald; opacity: 0.4 }
+            Rectangle { anchors.bottom: parent.bottom; width: pwd.activeFocus ? parent.width : 0; height: 1 * s; color: root.emerald; Behavior on width { NumberAnimation {duration: 750; easing.type: Easing.OutExpo} } }
             TextInput {
-                id: pwd; anchors.fill: parent; color: root.mint; font.family: pf.name; font.pixelSize: 18 * s; font.letterSpacing: 4 * s
-                echoMode: TextInput.Password; passwordCharacter: "─"; focus: true; clip: true; verticalAlignment: TextInput.AlignVCenter
+                id: pwd; anchors.fill: parent; color: root.mint; font.family: pf.name; font.pixelSize: 18 * s; font.letterSpacing: 6 * s
+                //echoMode: TextInput.Password; passwordCharacter: "─"; focus: true; clip: true; verticalAlignment: TextInput.AlignVCenter 
+                echoMode: TextInput.Password; passwordCharacter: "x"; focus: true; clip: true; verticalAlignment: TextInput.AlignVCenter 
                 Keys.onReturnPressed: doLogin(); Keys.onEnterPressed: doLogin()
             }
             Text { anchors.verticalCenter: parent.verticalCenter; text: "password..."; color: root.emerald; opacity: 0.5; font.family: pf.name; font.pixelSize: 14 * s; font.letterSpacing: 4 * s; visible: !pwd.text && !pwd.activeFocus }
@@ -75,9 +76,9 @@ Rectangle {
 
         // Login Action
         Item {
-            width: 140 * s; height: 36 * s
+            width: 200 * s; height: 36 * s
             Rectangle { anchors.fill: parent; color: sbm.containsMouse ? root.emerald : "transparent"; border.color: root.emerald; border.width: 2; radius: 10 * s; Behavior on color { ColorAnimation { duration: 150 } } }
-            Text { anchors.centerIn: parent; text: "LOG IN"; color: sbm.containsMouse ? "#000" : root.mint; font.family: pf.name; font.pixelSize: 12 * s; font.letterSpacing: 4 * s; Behavior on color { ColorAnimation { duration: 150 } } }
+            Text { anchors.centerIn: parent; text: "LOG IN"; color: sbm.containsMouse ? "#000" : root.mint; font.family: pf.name; font.pixelSize: 14 * s; font.letterSpacing: 4 * s; Behavior on color { ColorAnimation { duration: 150 } } }
             MouseArea { id: sbm; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: doLogin() }
         }
         
