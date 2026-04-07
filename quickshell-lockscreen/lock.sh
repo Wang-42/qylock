@@ -1,23 +1,38 @@
 #!/usr/bin/env bash
 
-# Get current directory
+# Current directory
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Export paths for Quickshell
+# Set library paths
 export QML2_IMPORT_PATH="$DIR/imports:$QML2_IMPORT_PATH"
 export QML_XHR_ALLOW_FILE_READ=1
 
-# Ensure session type is available (may not be inherited in contexts like systemd services)
+# Get session type
 export XDG_SESSION_TYPE="${XDG_SESSION_TYPE:-$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type --value 2>/dev/null || echo wayland)}"
 
-# Change theme here if you want
-export QS_THEME="${1:-Genshin}"
+# User theme preference
+# Get user theme
+CONFIG_FILE="$HOME/.config/qylock/theme"
+if [ -n "$1" ]; then
+    export QS_THEME="$1"
+elif [ -f "$CONFIG_FILE" ]; then
+    export QS_THEME=$(cat "$CONFIG_FILE")
+else
+    export QS_THEME="nier-automata"
+fi
+
+# Set theme path
+if [ -d "$DIR/../themes" ] && [ ! -d "$DIR/themes_link" ]; then
+    export QS_THEME_PATH="$DIR/../themes/$QS_THEME"
+else
+    export QS_THEME_PATH="$DIR/themes_link/$QS_THEME"
+fi
 
 echo "Locking with Quickshell using theme: $QS_THEME"
+echo "Theme path: $QS_THEME_PATH"
 
-# Safety: Kill any other lockers that might be running (like hyprlock from hypridle)
-# Only one app can hold the Wayland session lock at a time.
+# Kill active lockers
 killall -9 hyprlock swaylock wlogout 2>/dev/null || true
 
-# Run the shell with a unique filename to avoid IPC interference with existing bars
+# Execute lock screen
 quickshell -p "$DIR/lock_shell.qml"

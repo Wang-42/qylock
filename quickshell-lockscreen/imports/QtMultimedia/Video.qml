@@ -15,15 +15,14 @@ Item {
     property int loops: 1
     property int fillMode: 1 
 
-    // Constants for themes that use Video.PreserveAspectCrop
+    // Fill mode constants
     enum FillMode { 
         Stretch = 0, 
         PreserveAspectFit = 1, 
         PreserveAspectCrop = 2 
     }
 
-    // Since we are in Video.qml, these will be accessible as Video.Stretch etc.
-    // If the theme uses VideoOutput.PreserveAspectCrop, it will look at VideoOutput.qml.
+    // Qt5 compatibility shims
 
     Native.VideoOutput {
         id: videoOut
@@ -50,7 +49,7 @@ Item {
             var lastSlash = str.lastIndexOf("/");
             var filename = lastSlash >= 0 ? str.substring(lastSlash + 1) : str;
             
-            var tName = Quickshell.env("QS_THEME") || "Genshin";
+            var tName = Quickshell.env("QS_THEME") || "nier-automata";
             var resolvedStr = "file://" + Quickshell.shellDir + "/themes_link/" + tName + "/" + filename;
             
             if (player.source.toString() !== resolvedStr) {
