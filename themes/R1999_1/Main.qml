@@ -4,10 +4,11 @@ import Qt5Compat.GraphicalEffects
 import QtMultimedia
 import Qt.labs.folderlistmodel
 
-Item {
+Rectangle {
     id: root
     width: 1920
     height: 1080
+    color: "transparent"
     readonly property real s: width / 1920
 
     // Palette
@@ -430,6 +431,7 @@ Item {
                 horizontalAlignment: TextInput.AlignRight
                 echoMode: TextInput.Password
                 passwordCharacter: "✦"
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhSensitiveData | Qt.ImhNoAutoUppercase
                 font.family: serifFont.name
                 font.pixelSize: 22 * s
                 font.letterSpacing: 10 * s
