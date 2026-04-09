@@ -49,20 +49,20 @@ Rectangle {
 
     // Login Area
     Column {
-        anchors.bottom: parent.bottom; anchors.left: parent.left; anchors.margins: 60 * s
+        anchors.bottom: parent.bottom; anchors.left: parent.left; anchors.leftMargin: 60 * s; anchors.bottomMargin: 90 * s
         width: 320 * s; spacing: 20 * s; opacity: root.ui
 
         // User Select
         Text {
             text: ((userHelper.currentItem && userHelper.currentItem.uName) ? userHelper.currentItem.uName : (userModel.lastUser || "User")).toUpperCase()
-            color: "white"; font.family: pf.name; font.pixelSize: 24 * s; font.letterSpacing: 3 * s
+            color: "white"; font.family: pf.name; font.pixelSize: 26 * s; font.letterSpacing: 3 * s
             layer.enabled: true; layer.effect: DropShadow { color: "#aa000000"; radius: 4; samples: 8; horizontalOffset: 1; verticalOffset: 1 }
             MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: { if (userModel && userModel.rowCount() > 0) root.userIndex = (root.userIndex + 1) % userModel.rowCount() } }
         }
 
         // Pass Field
         Item {
-            width: 200 * s; height: 36 * s
+            width: 227 * s; height: 36 * s
             Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1 * s; color: root.emerald; opacity: 0.4 }
             Rectangle { anchors.bottom: parent.bottom; width: pwd.activeFocus ? parent.width : 0; height: 1 * s; color: root.emerald; Behavior on width { NumberAnimation {duration: 750; easing.type: Easing.OutExpo} } }
             TextInput {
@@ -76,7 +76,7 @@ Rectangle {
 
         // Login Action
         Item {
-            width: 200 * s; height: 36 * s
+            width: 227 * s; height: 36 * s
             Rectangle { anchors.fill: parent; color: sbm.containsMouse ? root.emerald : "transparent"; border.color: root.emerald; border.width: 2; radius: 10 * s; Behavior on color { ColorAnimation { duration: 150 } } }
             Text { anchors.centerIn: parent; text: "LOG IN"; color: sbm.containsMouse ? "#000" : root.mint; font.family: pf.name; font.pixelSize: 14 * s; font.letterSpacing: 4 * s; Behavior on color { ColorAnimation { duration: 150 } } }
             MouseArea { id: sbm; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: doLogin() }
@@ -87,7 +87,7 @@ Rectangle {
 
     // Sessions Area
     Row {
-        anchors.top: parent.top; anchors.left: parent.left; anchors.margins: 40 * s; spacing: 20 * s; opacity: root.ui
+        anchors.bottom: parent.bottom; anchors.left: parent.left; anchors.leftMargin: 60 * s; anchors.bottomMargin: 50 * s; spacing: 10 * s; opacity: root.ui
         Repeater {
             model: [{l: (sessionHelper.currentItem && sessionHelper.currentItem.sName ? sessionHelper.currentItem.sName : "Session").toUpperCase(), a: 2}, {l: "RESTART", a: 0}, {l: "POWER", a: 1}]
             delegate: Item {
