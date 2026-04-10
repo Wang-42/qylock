@@ -7,6 +7,13 @@ SYSTEM_THEMES_DIR="/usr/share/sddm/themes"
 SDDM_CONF_DIR="/etc/sddm.conf.d"
 SDDM_CONF="$SDDM_CONF_DIR/theme.conf"
 
+# Check for Qt5 legacy themes
+if [ -d "$SCRIPT_DIR/themes-qt5" ]; then
+    # Define colors locally if not yet defined (they are defined below, but we can move this check after them)
+    # Moving the check after color definitions for better UI
+    :
+fi
+
 # Reset terminal colors on exit or crash
 trap 'echo -ne "\033[0m"' EXIT
 
@@ -69,6 +76,17 @@ fi
 
 success "Dependencies verified"
 
+# Check for Qt5 legacy themes
+if [ -d "$SCRIPT_DIR/themes-qt5" ]; then
+    echo -e "${C_YELLOW}${C_BOLD} ╭─ 󰓅 LEGACY THEMES DETECTED${C_RESET}"
+    echo -ne "${C_MAIN}${C_BOLD} ╰─ ${C_YELLOW}Use Qt5 compatible versions? (y/n): ${C_RESET}"
+    read -rp "" USE_QT5
+    if [[ "$USE_QT5" =~ ^[Yy]$ ]]; then
+        THEMES_DIR="$SCRIPT_DIR/themes-qt5"
+        substep "Using legacy directory: themes-qt5/"
+    fi
+fi
+
 # Check if themes directory exists
 if [ ! -d "$THEMES_DIR" ]; then
     error "Themes directory not found at $THEMES_DIR"
@@ -95,66 +113,6 @@ if ! command -v fzf &> /dev/null; then
 else
     # List themes and let user select one using fzf
     SELECTED_THEME=$(ls -1 "$THEMES_DIR" | fzf --prompt="Select theme: " --height=15 --reverse --border --header="Use arrow keys/Enter to select")
-fi
-
-# Sub-selection for Cozytile variants
-if [ "$SELECTED_THEME" == "cozytile" ]; then
-    info "Selecting variant for Cozytile theme..."
-    COZYTILE_DIR="$THEMES_DIR/cozytile"
-    
-    if ! command -v fzf &> /dev/null; then
-        VARIANTS=($(ls -1 "$COZYTILE_DIR"))
-        for i in "${!VARIANTS[@]}"; do
-            echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}$((i+1)) ${C_DIM}❯ ${C_RESET}${VARIANTS[$i]}"
-        done
-        echo -ne "${C_MAIN}${C_BOLD} ╰─ ${C_YELLOW}Choice: ${C_RESET}"
-        read -rp "" V_SELECTION
-        if [[ "$V_SELECTION" =~ ^[0-9]+$ ]] && [ "$V_SELECTION" -ge 1 ] && [ "$V_SELECTION" -le "${#VARIANTS[@]}" ]; then
-            SELECTED_THEME="${VARIANTS[$((V_SELECTION-1))]}"
-        else
-            error "Invalid variant selection. Exiting."
-            exit 1
-        fi
-    else
-        SELECTED_VARIANT=$(ls -1 "$COZYTILE_DIR" | fzf --prompt="Select variant: " --height=10 --reverse --border --header="Choose a Cozytile variant")
-        if [ -z "$SELECTED_VARIANT" ]; then
-            error "No variant selected. Exiting."
-            exit 0
-        fi
-        SELECTED_THEME="$SELECTED_VARIANT"
-    fi
-    # Re-map the themes directory to the variants folder for installation
-    THEMES_DIR="$COZYTILE_DIR"
-fi
-
-# Sub-selection for TUI variants
-if [ "$SELECTED_THEME" == "tui" ]; then
-    info "Selecting variant for TUI theme..."
-    TUI_VARIANTS_DIR="$THEMES_DIR/tui"
-    
-    if ! command -v fzf &> /dev/null; then
-        VARIANTS=($(ls -1 "$TUI_VARIANTS_DIR"))
-        for i in "${!VARIANTS[@]}"; do
-            echo -e "${C_MAIN}${C_BOLD} │  ${C_ACCENT}$((i+1)) ${C_DIM}❯ ${C_RESET}${VARIANTS[$i]}"
-        done
-        echo -ne "${C_MAIN}${C_BOLD} ╰─ ${C_YELLOW}Choice: ${C_RESET}"
-        read -rp "" V_SELECTION
-        if [[ "$V_SELECTION" =~ ^[0-9]+$ ]] && [ "$V_SELECTION" -ge 1 ] && [ "$V_SELECTION" -le "${#VARIANTS[@]}" ]; then
-            SELECTED_THEME="${VARIANTS[$((V_SELECTION-1))]}"
-        else
-            error "Invalid variant selection. Exiting."
-            exit 1
-        fi
-    else
-        SELECTED_VARIANT=$(ls -1 "$TUI_VARIANTS_DIR" | fzf --prompt="Select TUI variant: " --height=10 --reverse --border --header="Choose a TUI color variant")
-        if [ -z "$SELECTED_VARIANT" ]; then
-            error "No variant selected. Exiting."
-            exit 0
-        fi
-        SELECTED_THEME="$SELECTED_VARIANT"
-    fi
-    # Re-map the themes directory to the variants folder for installation
-    THEMES_DIR="$TUI_VARIANTS_DIR"
 fi
 
 # Sub-selection for Terraria theme
@@ -273,12 +231,6 @@ fi
 # Copy theme to system directory
 substep "Copying theme to /usr/share/sddm/themes/..."
 sudo cp -r "$THEMES_DIR/$SELECTED_THEME" "$SYSTEM_THEMES_DIR/"
-
-# If it's a TUI variant, copy the shared TUI fonts directory to maintain relative paths
-if [ -d "$THEMES_DIR/tui-fonts" ]; then
-    substep "Installing TUI fonts..."
-    sudo cp -r "$THEMES_DIR/tui-fonts" "$SYSTEM_THEMES_DIR/"
-fi
 
 # Update SDDM configuration
 substep "Updating sddm settings..."
