@@ -1,0 +1,8 @@
+[SddmGreeterTheme]
+Name=lilypad-ride
+Description=lilypad-ride Qylock Theme
+Author=Wang-42
+Type=sddm-theme
+MainScript=Main.qml
+ConfigFile=theme.conf
+QtVersion=6
